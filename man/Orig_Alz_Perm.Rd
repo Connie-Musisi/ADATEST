@@ -28,7 +28,7 @@ Orig_Alz_Perm(
 }
 \value{
 A list containing:
-\item{org_otu}{Original OTU table as a matrix.}
+\item{org_scaled}{Scaled original OTU table as a matrix.}
 \item{Org_tax}{Original taxonomy table as a data frame.}
 \item{p}{Vector of unadjusted p-values.}
 \item{p.adjusted}{Vector of adjusted p-values.}

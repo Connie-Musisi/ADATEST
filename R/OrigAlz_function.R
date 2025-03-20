@@ -11,7 +11,7 @@
 #' @param n2 Integer. Number of samples in group 1 (default: computed from dataset).
 #'
 #' @return A list containing:
-#' 	\item{org_otu}{Original OTU table as a matrix.}
+#' 	\item{org_scaled}{Scaled original OTU table as a matrix.}
 #' 	\item{Org_tax}{Original taxonomy table as a data frame.}
 #' 	\item{p}{Vector of unadjusted p-values.}
 #' 	\item{p.adjusted}{Vector of adjusted p-values.}
@@ -94,9 +94,10 @@ Orig_Alz_Perm <- function(simdata_filter, Train_parest, B=1000,
   Original_results$p.adjusted<-p.adjusted
   
   
-  return(list(org_otu=org_otu,
+  return(list(org_scaled=otu_scaled,
               Org_tax=Org_tax,
-              p=p,p.adjusted=p.adjusted,
+              p=p,
+              p.adjusted=p.adjusted,
               Stat_Obs=stat.obs,
               Original_results=Original_results))
 }

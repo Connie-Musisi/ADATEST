@@ -140,14 +140,6 @@ PseudoData <- function(simdata_filter,
   min.without.zero <- apply(otu_train_filter, 2, function(x) { min(x[x != 0]) })
   log_fold_change <- log2((mean_group2 + min.without.zero) / (mean_group1 + min.without.zero))
   
-  if (t0 == 1 && t1 == 1.5 && t2 == Inf) {
-    t0 <- as.numeric(quantile(abs(log_fold_change), 0.1))
-    t1 <- as.numeric(quantile(abs(log_fold_change), 0.9))
-    t2 <- 10
-    if (t1 < 1.5 || t1 > t2) {
-      t1 <- max(1.5, t0 + 0.5)
-    }
-  }
   
   # Extract the taxonomic table as a data frame
   tax_df <- as.data.frame(tax_table(training_data))
@@ -155,7 +147,7 @@ PseudoData <- function(simdata_filter,
   
   # Assign group indicators based on LFC using thresholds t0, t1, t2
   tax_df$group_ind <- ifelse(abs(log_fold_change) < t0, "I_0",
-                             ifelse((abs(log_fold_change) > t1), "I_1", "I_none"))
+                             ifelse(t1 < (abs(log_fold_change) <  t2), "I_1", "I_B"))
   
   sample_df <- as.data.frame(sample_data(training_data))
   sample_df$new_group <- c(rep(0, n_samples_group1), rep(1, n_samples_group2))

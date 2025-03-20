@@ -11,7 +11,7 @@
 #' @return A list containing:
 #' \describe{
 #'   \item{y}{A numeric vector of outcome variables (`-1` for `I_0`, `1` for `I_1`).}
-#'   \item{regression_data1}{A matrix of normalized OTU counts used for training.}
+#'   \item{Train_scaled}{A matrix of scaled training data used for fitting the model.}
 #'   \item{Train_results}{A data frame containing model predictions and actual outcomes.}
 #'   \item{Train_parest}{A numeric vector of trained regression parameters.}
 #' }
@@ -113,7 +113,7 @@ Train_analyze <- function(data, seed=set.seed(19)){
   Train_results <- as.data.frame(Train_results)
   
   return(list(y=y,
-              regression_data1=regression_data1,
+              Train_scaled=regression_data1,
               Train_results=Train_results,
               Train_parest=Train_parest))
 }

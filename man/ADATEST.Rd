@@ -20,10 +20,9 @@ ADATEST(physeq, t0 = 1, t1 = 1.5, t2 = +Inf, B = 1000)
 \value{
 A list containing:
 \itemize{
-\item \code{Original_results}: Results from the permutation test.
+\item \code{Original_results}: Results from the permutation test including scaled original dataset, p values, adjusted p-values, test statistics and results about the allocation of DA status
 \item \code{Unscaled_data}: List containing training data and original data.
 \item \code{Train_results}: Results from training data analysis.
-\item \code{Results}: Evaluation metrics including FDR, sensitivity, specificity, and power.
 }
 }
 \description{

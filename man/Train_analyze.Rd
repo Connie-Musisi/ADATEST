@@ -15,7 +15,7 @@ Train_analyze(data, seed = set.seed(19))
 A list containing:
 \describe{
 \item{y}{A numeric vector of outcome variables (\code{-1} for \code{I_0}, \code{1} for \code{I_1}).}
-\item{regression_data1}{A matrix of normalized OTU counts used for training.}
+\item{Train_scaled}{A matrix of scaled training data used for fitting the model.}
 \item{Train_results}{A data frame containing model predictions and actual outcomes.}
 \item{Train_parest}{A numeric vector of trained regression parameters.}
 }
