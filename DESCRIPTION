@@ -14,6 +14,7 @@ Authors@R:
 Description: Implements an adaptive test for predicting differential abundance in taxa using microbiome data. To address the unique characteristics of microbiome data, this method tailors test statistics to the observed data, offering good performance across diverse scenarios. It transforms differential abundance testing into a prediction framework by constructing a training dataset to distinguish DA from non-DA taxa. A linear model is trained on ordered, normalized counts as predictors and DA labels as the outcome. The model’s predictions are used to compute an adaptive test statistic, with permutation-based p-values adjusted using Storey's q-value method for robust FDR control.
 License: MIT + file LICENSE
 Depends: R (>= 4.0)
+VignetteBuilder: knitr
 Imports:
     phyloseq,
     ggplot2,

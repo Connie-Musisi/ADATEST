@@ -1,0 +1,45 @@
+---
+title: "Using ADATEST for Differential Abundance Analysis"
+author: "Connie Musisi"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Adaptive Test for DA}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+This vignette demonstrates how to use the 'ADATEST' package to do differential abundance analysis in microbiome datasets. The method is particularly well-suited for detecting taxa that differentially abundant between two groups, using a data-driven approach to estimate test statistics and control the False Discovery Rate (FDR).
+
+## Load necessary libraries
+```{ libraries}
+library(ADATEST)
+library(phyloseq)
+library(microbiome)
+```
+
+# Application and Results
+
+In this example we shall apply the adaptive test to the Dietswap data from the microbiome package. Since the data is longitudinal in nature, we will consider data from time point 2 at genus level.
+
+```{data}
+data(dietswap)
+dietswap2 = subset_samples(dietswap, timepoint==2)
+dietswap2_genus = tax_glom(dietswap, taxrank = "Genus")
+result = ADATEST( DIETSWAP, group_var = "nationality", group_levels = c("AAM", "AFR"))
+```
+
+## Interpretation
+The output contains the scaled and unscaled original and training datasets and the results from the analysis including the test statistics, raw and adjusted p-values.
+
+# Conclusion
+
+In this vignette, we demonstrated how to use the 'ADATEST' package to detect differentially abundant DA taxa between two groups using an adaptive test. The method is robust and effectively controls the FDR, making it a useful tool for microbiome data analysis.

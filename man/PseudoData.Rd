@@ -6,11 +6,13 @@
 \usage{
 PseudoData(
   simdata_filter,
+  group_var = "group",
+  group_levels = c("0", "1"),
   t0 = 1,
   t1 = 1.5,
   t2 = +Inf,
-  n.taxa0 = NULL,
-  empirical_adjust = TRUE
+  empirical_adjust = TRUE,
+  n.taxa0 = NULL
 )
 }
 \arguments{
@@ -22,10 +24,10 @@ PseudoData(
 
 \item{t2}{Maximum threshold for DA classification (default: +Inf).}
 
+\item{empirical_adjust}{Logical; if TRUE, adjusts the pseudo-dataset based on empirical distribution.}
+
 \item{n.taxa0}{Number of taxa in the non-DA group, if known (if default (NULL), it is set dynamically
 based on half the total number of taxa.).}
-
-\item{empirical_adjust}{Logical; if TRUE, adjusts the pseudo-dataset based on empirical distribution.}
 }
 \value{
 A list containing:

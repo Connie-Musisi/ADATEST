@@ -10,6 +10,8 @@ Orig_Alz_Perm(
   B = 1000,
   p.adjust.method = "BH",
   n1 = nrow(org_otu)/2,
+  group_var = "group",
+  group_levels = c("0", "1"),
   n2 = nrow(org_otu)/2
 )
 }

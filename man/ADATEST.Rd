@@ -4,10 +4,25 @@
 \alias{ADATEST}
 \title{Adaptive Test for Differential Abundance Analysis}
 \usage{
-ADATEST(physeq, t0 = 1, t1 = 1.5, t2 = +Inf, B = 1000)
+ADATEST(
+  physeq,
+  group_var = "group",
+  group_levels = c("0", "1"),
+  t0 = 1,
+  t1 = 1.5,
+  t2 = +Inf,
+  B = 1000,
+  empirical_adjust = TRUE,
+  p.adjust.method = "BH",
+  n.taxa0 = NULL
+)
 }
 \arguments{
 \item{physeq}{A phyloseq object containing OTU data.}
+
+\item{group_var}{Grroup variable of interest (efault is group).}
+
+\item{group_levels}{Levels of the group variable of interest (default is 0, 1).}
 
 \item{t0}{Lower bound for data transformation (default: 1).}
 
@@ -16,6 +31,12 @@ ADATEST(physeq, t0 = 1, t1 = 1.5, t2 = +Inf, B = 1000)
 \item{t2}{Maximum bound for data transformation (default: +Inf).}
 
 \item{B}{Number of permutations used for significance testing (default: 1000).}
+
+\item{empirical_adjust}{Use empirical distribution to resample in case of unequal group sizes (default is TRUE if this is the case).}
+
+\item{p.adjust.method}{p-value adjustment method (defaults is BH, Benjamini-Hochberg).}
+
+\item{n.taxa0}{Number of non-DA taxa if it is known (default is NULL).}
 }
 \value{
 A list containing:
