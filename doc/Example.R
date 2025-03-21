@@ -1,6 +1,11 @@
-## ----echo=FALSE---------------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+## ----setup--------------------------------------------------------------------
+library(ADATEST)
+library(phyloseq)
+library(microbiome)
 
