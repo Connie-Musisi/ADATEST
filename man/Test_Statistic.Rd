@@ -4,13 +4,7 @@
 \alias{Test_Statistic}
 \title{Compute Test Statistic for Differential Abundance Analysis}
 \usage{
-Test_Statistic(
-  org_otu,
-  Train_parest,
-  n1 = nrow(org_otu)/2,
-  n2 = nrow(org_otu)/2,
-  B = 100
-)
+Test_Statistic(org_otu, Train_parest, n1, n2, B)
 }
 \arguments{
 \item{org_otu}{A matrix representing the OTU table with samples in rows (OTU tavle from original dataset)}

@@ -4,7 +4,7 @@
 \alias{Train_analyze}
 \title{Train prediction model}
 \usage{
-Train_analyze(data, seed = set.seed(19))
+Train_analyze(data, seed)
 }
 \arguments{
 \item{data}{A \code{phyloseq} object containing microbiome data with taxonomic and sample information.}

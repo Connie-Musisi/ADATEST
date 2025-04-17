@@ -8,11 +8,11 @@ PseudoData(
   simdata_filter,
   group_var,
   group_levels,
-  t0 = 1,
-  t1 = 1.5,
-  t2 = +Inf,
-  empirical_adjust = TRUE,
-  n.taxa0 = NULL
+  t0,
+  t1,
+  t2,
+  empirical_adjust,
+  n.taxa0
 )
 }
 \arguments{

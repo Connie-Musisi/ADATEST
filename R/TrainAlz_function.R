@@ -27,7 +27,7 @@
 #' result <- Train_analyze(GlobalPatterns)
 #' print(result$Train_results)
 #' }
-Train_analyze <- function(data, seed=set.seed(19)){
+Train_analyze <- function(data, seed){
   ########## Train data ######
   ## ---------------------------------------------------
   ##### Permutation #####

@@ -28,11 +28,10 @@
 #' @import qvalue
 #' @importFrom stats p.adjust
 #' @export
-Orig_Alz_Perm <- function(simdata_filter, Train_parest, B=1000,
-                          p.adjust.method="BH", n1=nrow(org_otu)/2,
+Orig_Alz_Perm <- function(simdata_filter, Train_parest, B,
+                          p.adjust.method,
                           group_var,
-                          group_levels,
-                          n2=nrow(org_otu)/2){
+                          group_levels){
   #set.seed(19)
   ############# Analyzing Original data ################
   org_data <- simdata_filter
@@ -60,7 +59,7 @@ Orig_Alz_Perm <- function(simdata_filter, Train_parest, B=1000,
   otu_scaled<-rbind(otu1,otu2)
   
   
-  stat.obs<-Test_Statistic(otu_scaled,Train_parest,B=B)
+  stat.obs<-Test_Statistic(otu_scaled,Train_parest, n1=n1, n2=n2, B=B)
   set.seed(19)
   # Permutation null distributions
   nd<-matrix(nrow=B,ncol=n.taxa)

@@ -12,8 +12,7 @@
 #' @return A vector of computed test statistics for each taxon.
 #'
 #' @export
-Test_Statistic <- function(org_otu, Train_parest, n1 = nrow(org_otu) / 2,
-                           n2 = nrow(org_otu) / 2, B = 100) {
+Test_Statistic <- function(org_otu, Train_parest, n1, n2, B) {
   n.taxa <- ncol(org_otu)
   
   otu1 <- org_otu[1:n1, ]

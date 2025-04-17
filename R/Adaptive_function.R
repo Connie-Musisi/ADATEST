@@ -27,7 +27,8 @@ ADATEST <- function(physeq, group_var = "group",
                     t0=1, t1=1.5, t2=+Inf, B=1000,
                     empirical_adjust = TRUE, 
                     p.adjust.method = "BH",
-                    n.taxa0=NULL){
+                    n.taxa0=NULL,
+                    seed=set.seed(19)){
   # Total Sum Scaling
   simdata_filter <- transform_sample_counts(physeq, function(x) { x / sum(x)})
   
@@ -46,7 +47,7 @@ ADATEST <- function(physeq, group_var = "group",
   Train <- Pseudo_Train$Train
   
   Train_nan <- NA.remove(Train)
-  Train_res <- Train_analyze(Train_nan) 
+  Train_res <- Train_analyze(Train_nan, seed=seed) 
   
   # Permutation Test
   cat("running permutation test")

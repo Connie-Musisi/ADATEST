@@ -7,12 +7,10 @@
 Orig_Alz_Perm(
   simdata_filter,
   Train_parest,
-  B = 1000,
-  p.adjust.method = "BH",
-  n1 = nrow(org_otu)/2,
+  B,
+  p.adjust.method,
   group_var,
-  group_levels,
-  n2 = nrow(org_otu)/2
+  group_levels
 )
 }
 \arguments{

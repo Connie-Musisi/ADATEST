@@ -14,7 +14,8 @@ ADATEST(
   B = 1000,
   empirical_adjust = TRUE,
   p.adjust.method = "BH",
-  n.taxa0 = NULL
+  n.taxa0 = NULL,
+  seed = set.seed(19)
 )
 }
 \arguments{
