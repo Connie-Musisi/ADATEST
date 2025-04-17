@@ -32,9 +32,9 @@ Normalize<-function(sample1,sample2) {
   sample1_norm<-(sample1-q[1])/norm.factor
   sample2_norm<-(sample2-q[1])/norm.factor
   # version 2 needs following three lines
-  #m<-(median(as.numeric(sample2))+median(as.numeric(sample1)))/2
-  #sample1_norm<-sample1_norm-m
-  #sample2_norm<-sample2_norm-m
+  m<-(median(as.numeric(sample2))+median(as.numeric(sample1)))/2
+  sample1_norm<-sample1_norm-m
+  sample2_norm<-sample2_norm-m
   return(list(
     sample1=sample1_norm,
     sample2=sample2_norm

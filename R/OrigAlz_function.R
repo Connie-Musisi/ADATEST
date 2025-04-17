@@ -30,6 +30,8 @@
 #' @export
 Orig_Alz_Perm <- function(simdata_filter, Train_parest, B=1000,
                           p.adjust.method="BH", n1=nrow(org_otu)/2,
+                          group_var,
+                          group_levels,
                           n2=nrow(org_otu)/2){
   #set.seed(19)
   ############# Analyzing Original data ################
@@ -41,8 +43,10 @@ Orig_Alz_Perm <- function(simdata_filter, Train_parest, B=1000,
   }else{
     org_otu <- as.matrix(otu_table(org_data))
   }
-  n1 <- sum(simdata_filter@sam_data[,"group"]==0)
-  n2 <- sum(simdata_filter@sam_data[,"group"]==1)
+  samdata <- sample_data(simdata_filter)[,group_var]
+  n1 <- sum(samdata == group_levels[1])
+  n2 <- sum(samdata == group_levels[2])
+  
   
   n.taxa<-nrow(simdata_filter@tax_table)
   

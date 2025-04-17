@@ -6,8 +6,8 @@
 \usage{
 PseudoData(
   simdata_filter,
-  group_var = "group",
-  group_levels = c("0", "1"),
+  group_var,
+  group_levels,
   t0 = 1,
   t1 = 1.5,
   t2 = +Inf,

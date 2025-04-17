@@ -39,14 +39,21 @@
 #' 
 #' @export
 PseudoData <- function(simdata_filter,
-                 t0 = 1, 
-                 t1 = 1.5, 
-                 t2 = +Inf,
-                 n.taxa0 = NULL, 
-                 empirical_adjust = TRUE) {
+                       group_var,
+                       group_levels,
+                       t0=1, 
+                       t1=1.5, 
+                       t2=+Inf,
+                       empirical_adjust = TRUE,
+                       n.taxa0 = NULL) {
   
-  # Extract samples from group 0 (the original group you want to match with downsizing)
-  simdata_group1 <- subset_samples(simdata_filter, group == 0)
+  
+  samdata <- as.data.frame(sample_data(simdata_filter))
+  grp_vec <- samdata[[group_var]]
+  
+  # Subset based on the group variable directly for group 1
+  samps_grp1 <- rownames(samdata)[grp_vec == group_levels[1]]
+  simdata_group1 <- prune_samples(samps_grp1, simdata_filter)
   if (taxa_are_rows(simdata_group1)) {
     otutab_group1 <- t(otu_table(simdata_group1))
   } else {
@@ -54,14 +61,16 @@ PseudoData <- function(simdata_filter,
   }
   n_samples_group1 <- nrow(otutab_group1)
   
-  # Extract samples from group 1 (used to create the pseudo groups)
-  simdata_group2 <- subset_samples(simdata_filter, group == 1)
+  # Subset for group 2 using the same direct approach
+  samps_grp2 <- rownames(samdata)[grp_vec == group_levels[2]]
+  simdata_group2 <- prune_samples(samps_grp2, simdata_filter)
   if (taxa_are_rows(simdata_group2)) {
     otutab_group2 <- t(otu_table(simdata_group2))
   } else {
     otutab_group2 <- otu_table(simdata_group2)
   }
   n_samples_group2 <- nrow(otutab_group2)
+  
   
   n.taxa <- ncol(otutab_group1)
   if (is.null(n.taxa0)) {
@@ -139,15 +148,20 @@ PseudoData <- function(simdata_filter,
   
   min.without.zero <- apply(otu_train_filter, 2, function(x) { min(x[x != 0]) })
   log_fold_change <- log2((mean_group2 + min.without.zero) / (mean_group1 + min.without.zero))
+  # Calculate δ_med as the median of the log fold changes
+  delta_med <- median(log_fold_change, na.rm = TRUE)
   
+  # Center the log fold changes
+  lfc_centered <- log_fold_change - delta_med
   
   # Extract the taxonomic table as a data frame
   tax_df <- as.data.frame(tax_table(training_data))
   tax_df$lfc <- log_fold_change
+  tax_df$lfc_centered <- lfc_centered
   
   # Assign group indicators based on LFC using thresholds t0, t1, t2
-  tax_df$group_ind <- ifelse(abs(log_fold_change) < t0, "I_0",
-                             ifelse(t1 < (abs(log_fold_change) <  t2), "I_1", "I_B"))
+  tax_df$group_ind <- ifelse(abs(lfc_centered) < t0, "I_0",
+                             ifelse(abs(lfc_centered) > t1 & abs(lfc_centered) < t2, "I_1", "I_B"))
   
   sample_df <- as.data.frame(sample_data(training_data))
   sample_df$new_group <- c(rep(0, n_samples_group1), rep(1, n_samples_group2))
@@ -161,5 +175,7 @@ PseudoData <- function(simdata_filter,
   train_pruned <- prune_taxa(train_taxa, train_final)
   
   return(list(pseudo_lfc = log_fold_change,
+              delta_med = delta_med,
+              lfc_centered = lfc_centered,
               Train = train_pruned))
 }
