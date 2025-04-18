@@ -44,10 +44,11 @@ Test_Statistic <- function(org_otu, Train_parest, n1, n2, B) {
   select1 <- (smallest == 1)  
   select2 <- (smallest == 2)  
   otu.final <- matrix(nrow = n.taxa, ncol = (n1 + n2))
-  otu.final[select1, (n1 + 1):(n1 + n2)] <- otu2.sorted[select1, ]
-  otu.final[select1, 1:n1] <- otu1.sorted[select1, ]
-  otu.final[select2, (n1 + 1):(n1 + n2)] <- otu1.sorted[select2, 1:n2]
-  otu.final[select2, 1:n2] <- otu2.sorted[select2, ]
+  
+  otu.final[select1, (n1 + 1):(n1 + n2)] <- otu2.sorted[select1, , drop = FALSE]
+  otu.final[select1, 1:n1] <- otu1.sorted[select1, , drop = FALSE]
+  otu.final[select2, (n1 + 1):(n1 + n2)] <- otu1.sorted[select2, 1:n2, drop = FALSE]
+  otu.final[select2, 1:n2] <- otu2.sorted[select2, 1:n2, drop = FALSE]
   
   # Compute test statistic using estimated parameters
   org_pred <- otu.final %*% Train_parest
