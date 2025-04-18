@@ -1,17 +1,29 @@
 #' Compute Test Statistic for Differential Abundance Analysis
 #'
-#' This function calculates a test statistic for each taxon using a PLS estimates/scores from the trained model.
-#' It sorts samples within each group and aligns them according to their mean abundance before computing the test statistic.
+#' Computes a test statistic for each taxon based on the trained regression parameters (scores) from the PLS model.
+#' Samples are grouped, sorted by abundance, and aligned based on group-level means to reduce noise and enhance interpretability.
+#' This function is used internally by \code{Orig_Alz_Perm()}.
 #'
-#' @param org_otu A matrix representing the OTU table with samples in rows (OTU tavle from original dataset)
-#' @param Train_parest A vector of estimated parameters (scores) used for computing the test statistic.
-#' @param n1 The number of samples in group 1 (default: half of the dataset).
-#' @param n2 The number of samples in group 2 (default: half of the dataset).
-#' @param B Number of permutations used for significance testing (default: 100).
+#' @param org_otu A numeric matrix representing the scaled OTU table from the original dataset, with samples in rows and taxa in columns.
+#' @param Train_parest A numeric vector of trained regression parameters (scores) obtained from \code{Train_analyze()}.
+#' @param n1 Integer. Number of samples in group 1. Passed from \code{Orig_Alz_Perm()}.
+#' @param n2 Integer. Number of samples in group 2. Passed from \code{Orig_Alz_Perm()}.
+#' @param B Integer. Number of permutations (included for interface consistency; not used directly in this function).
 #'
-#' @return A vector of computed test statistics for each taxon.
+#' @return A numeric vector of test statistics, one for each taxon.
 #'
+#' @details
+#' For each taxon:
+#' \itemize{
+#'   \item The function compares group-specific mean abundances to determine ordering.
+#'   \item OTUs are sorted within each group to reduce intra-group variability.
+#'   \item Taxa are then aligned by group and multiplied by the regression scores to yield a final test statistic.
+#' }
+#' The output is used to assess significance against permuted null distributions in the overall ADATEST pipeline.
+#'
+#' @keywords internal
 #' @export
+
 Test_Statistic <- function(org_otu, Train_parest, n1, n2, B) {
   n.taxa <- ncol(org_otu)
   

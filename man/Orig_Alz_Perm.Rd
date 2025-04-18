@@ -14,26 +14,26 @@ Orig_Alz_Perm(
 )
 }
 \arguments{
-\item{simdata_filter}{A phyloseq object containing filtered microbiome data.}
+\item{simdata_filter}{A phyloseq object containing filtered microbiome data (after TSS and trimming).}
 
-\item{Train_parest}{Training parameters for test statistic computation.}
+\item{Train_parest}{A numeric vector of parameter estimates from the training data, used to compute the test statistic.}
 
-\item{B}{Integer. Number of permutations to perform (default: 1000).}
+\item{B}{Integer. Number of permutations to perform.  Passed from \code{ADATEST()}.}
 
-\item{p.adjust.method}{Character. Method for p-value adjustment (default: "BH").}
+\item{p.adjust.method}{Character string specifying the p-value adjustment method. Passed from \code{ADATEST()}.}
 
-\item{n1}{Integer. Number of samples in group 0 (default: computed from dataset).}
+\item{group_var}{Character. The name of the grouping variable in the sample metadata.  Passed from \code{ADATEST()}.}
 
-\item{n2}{Integer. Number of samples in group 1 (default: computed from dataset).}
+\item{group_levels}{Character vector of length two, specifying the two levels of \code{group_var} to be compared. Passed from \code{ADATEST()}.}
 }
 \value{
 A list containing:
-\item{org_scaled}{Scaled original OTU table as a matrix.}
+\item{org_scaled}{Scaled OTU table from the original dataset (after normalization).}
 \item{Org_tax}{Original taxonomy table as a data frame.}
-\item{p}{Vector of unadjusted p-values.}
-\item{p.adjusted}{Vector of adjusted p-values.}
-\item{Stat_Obs}{Observed test statistics.}
-\item{Original_results}{Data frame containing test results, including p-values and adjusted indicators.}
+\item{p}{Vector of unadjusted p-values for each taxon.}
+\item{p.adjusted}{Vector of adjusted p-values based on the selected method.}
+\item{Stat_Obs}{Vector of observed test statistics.}
+\item{Original_results}{Data frame combining test statistics, taxonomic info, p-values, adjusted p-values, and differential abundance indicators.}
 }
 \description{
 This function computes a test statistic for each taxon in a microbiome dataset using estimated scores.

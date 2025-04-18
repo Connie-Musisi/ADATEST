@@ -3,20 +3,20 @@
 #' This function computes a test statistic for each taxon in a microbiome dataset using estimated scores.
 #' It then performs a permutation test to assess statistical significance and adjusts p-values for false discovery rate (FDR) control.
 #'
-#' @param simdata_filter A phyloseq object containing filtered microbiome data.
-#' @param Train_parest Training parameters for test statistic computation.
-#' @param B Integer. Number of permutations to perform (default: 1000).
-#' @param p.adjust.method Character. Method for p-value adjustment (default: "BH").
-#' @param n1 Integer. Number of samples in group 0 (default: computed from dataset).
-#' @param n2 Integer. Number of samples in group 1 (default: computed from dataset).
+#' @param simdata_filter A phyloseq object containing filtered microbiome data (after TSS and trimming).
+#' @param Train_parest A numeric vector of parameter estimates from the training data, used to compute the test statistic.
+#' @param B Integer. Number of permutations to perform.  Passed from \code{ADATEST()}.
+#' @param p.adjust.method Character string specifying the p-value adjustment method. Passed from \code{ADATEST()}.
+#' @param group_var Character. The name of the grouping variable in the sample metadata.  Passed from \code{ADATEST()}.
+#' @param group_levels Character vector of length two, specifying the two levels of \code{group_var} to be compared. Passed from \code{ADATEST()}.
 #'
 #' @return A list containing:
-#' 	\item{org_scaled}{Scaled original OTU table as a matrix.}
-#' 	\item{Org_tax}{Original taxonomy table as a data frame.}
-#' 	\item{p}{Vector of unadjusted p-values.}
-#' 	\item{p.adjusted}{Vector of adjusted p-values.}
-#' 	\item{Stat_Obs}{Observed test statistics.}
-#' 	\item{Original_results}{Data frame containing test results, including p-values and adjusted indicators.}
+#' \item{org_scaled}{Scaled OTU table from the original dataset (after normalization).}
+#' \item{Org_tax}{Original taxonomy table as a data frame.}
+#' \item{p}{Vector of unadjusted p-values for each taxon.}
+#' \item{p.adjusted}{Vector of adjusted p-values based on the selected method.}
+#' \item{Stat_Obs}{Vector of observed test statistics.}
+#' \item{Original_results}{Data frame combining test statistics, taxonomic info, p-values, adjusted p-values, and differential abundance indicators.}
 #'
 #' @details
 #' The function computes the test statistic for each taxon based on estimated scores. 
@@ -46,7 +46,6 @@ Orig_Alz_Perm <- function(simdata_filter, Train_parest, B,
   n1 <- sum(samdata == group_levels[1])
   n2 <- sum(samdata == group_levels[2])
   
-  
   n.taxa<-nrow(simdata_filter@tax_table)
   
   tmp<-sapply(1:n.taxa, FUN=function(i) {
@@ -65,13 +64,12 @@ Orig_Alz_Perm <- function(simdata_filter, Train_parest, B,
   nd<-matrix(nrow=B,ncol=n.taxa)
   for(i in 1:B) {
     perm_otu<-otu_scaled[sample(1:(n1+n2),(n1+n2),replace = FALSE),]
-    nd[i,]<-Test_Statistic(perm_otu,Train_parest,B=B)
+    nd[i,]<-Test_Statistic(perm_otu,Train_parest,n1=n1,n2=n2,B=B)
   }
   
   p<-sapply(1:n.taxa, function(i) {
     mean(nd[,i]>=stat.obs[i])
   })
-  
   
   # P-value adjustment
   if(p.adjust.method == "qvalue"){
@@ -87,7 +85,6 @@ Orig_Alz_Perm <- function(simdata_filter, Train_parest, B,
   colnames(stat.obs)<-"stat.obs"
   Original_results <- cbind(stat.obs,Org_tax)
   
-  
   ## ----Results----------------------------------------------------------------------------------------------------------
   new_ind <- character(nrow(Original_results))
   new_ind[p.adjusted>=0.05] <- "I_0"
@@ -95,7 +92,6 @@ Orig_Alz_Perm <- function(simdata_filter, Train_parest, B,
   Original_results$new_ind <- new_ind
   Original_results$p<-p
   Original_results$p.adjusted<-p.adjusted
-  
   
   return(list(org_scaled=otu_scaled,
               Org_tax=Org_tax,

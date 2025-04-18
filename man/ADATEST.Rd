@@ -19,36 +19,37 @@ ADATEST(
 )
 }
 \arguments{
-\item{physeq}{A phyloseq object containing OTU data.}
+\item{physeq}{A phyloseq object containing microbiome OTU/ASV count data.}
 
-\item{group_var}{Grroup variable of interest (efault is group).}
+\item{group_var}{Name of the grouping variable in sample metadata (default: "group").}
 
-\item{group_levels}{Levels of the group variable of interest (default is 0, 1).}
+\item{group_levels}{A character vector of two levels in \code{group_var} to be compared (default: c("0", "1")).}
 
-\item{t0}{Lower bound for data transformation (default: 1).}
+\item{t0}{Lower threshold for effect size classification (default: 1).}
 
-\item{t1}{Upper bound for data transformation (default: 1.5).}
+\item{t1}{Upper threshold for moderate effect classification (default: 1.5).}
 
-\item{t2}{Maximum bound for data transformation (default: +Inf).}
+\item{t2}{Maximum bound for strong effect classification (default: +Inf).}
 
-\item{B}{Number of permutations used for significance testing (default: 1000).}
+\item{B}{Number of permutations for significance testing (default: 1000).}
 
-\item{empirical_adjust}{Use empirical distribution to resample in case of unequal group sizes (default is TRUE if this is the case).}
+\item{empirical_adjust}{Logical. If TRUE, applies empirical adjustment for unequal group sizes (default: TRUE).}
 
-\item{p.adjust.method}{p-value adjustment method (defaults is BH, Benjamini-Hochberg).}
+\item{p.adjust.method}{Method for p-value adjustment; options include "BH", "bonferroni", "fdr", etc. (default: "BH").}
 
-\item{n.taxa0}{Number of non-DA taxa if it is known (default is NULL).}
+\item{n.taxa0}{Number of non-differentially abundant taxa, if known. Used for tuning (default: NULL).}
+
+\item{seed}{Random seed for reproducibility (default: \code{set.seed(19)}).}
 }
 \value{
 A list containing:
-\itemize{
-\item \code{Original_results}: Results from the permutation test including scaled original dataset, p values, adjusted p-values, test statistics and results about the allocation of DA status
-\item \code{Unscaled_data}: List containing training data and original data.
-\item \code{Train_results}: Results from training data analysis.
-}
+\item{Original_results}{Results from the permutation test, including p-values, adjusted p-values, test statistics, and DA status.}
+\item{Unscaled_data}{A list with the original phyloseq object and the training dataset used.}
+\item{Train_results}{Results from the training phase including parameter estimates and prediction performance.}
+\item{Pseudo}{Pseudo data summaries, including delta_med and centered log fold changes.}
 }
 \description{
-This function performs an adaptive differential abundance test using a permutation-based approach.
+This function performs an adaptive differential abundance test (ADATEST) using a permutation-based approach.
 It applies total sum scaling (TSS), trims the dataset to remove taxa that are not prevalent,
 subsets the data to create the Pseudo dataset and finally the training dataset,
 performs parameter estimation, conducts a permutation test, and evaluates performance metrics.

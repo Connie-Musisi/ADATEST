@@ -1,32 +1,38 @@
 #' Train prediction model
 #'
-#' This function trains a linear regression model on microbiome data to predict differential abundance in the training dataset.
-#' It applies a permutation approach for taxa labels and normalizes OTU counts before model fitting.
-#' The key output is `Train_parest`, a vector of trained regression parameters/partial least square estimates
-#' used for prediction and we call these the scores.
+#' This function trains a linear regression model on microbiome training data to predict differential abundance.
+#' It applies normalization to paired OTU counts, performs a sample-level permutation for the null group (`I_0`), 
+#' and fits a regression model using sorted input features.
+#' The resulting scores (`Train_parest`) are used downstream for test statistic computation.
 #'
-#' @param data A `phyloseq` object containing microbiome data with taxonomic and sample information.
-#' @param seed An optional seed for reproducibility. Default is `set.seed(19)`.
+#' @param data A \code{phyloseq} object containing microbiome training data with taxonomic information and group labels.
+#' @param seed An optional seed-setting expression for reproducibility (default: \code{set.seed(19)}).
 #'
 #' @return A list containing:
 #' \describe{
-#'   \item{y}{A numeric vector of outcome variables (`-1` for `I_0`, `1` for `I_1`).}
-#'   \item{Train_scaled}{A matrix of scaled training data used for fitting the model.}
-#'   \item{Train_results}{A data frame containing model predictions and actual outcomes.}
-#'   \item{Train_parest}{A numeric vector of trained regression parameters.}
+#'   \item{y}{A numeric vector of outcome labels: \code{-1} for \code{I_0} taxa, \code{1} for \code{I_1} taxa.}
+#'   \item{Train_scaled}{A matrix of normalized and sorted training features.}
+#'   \item{Train_results}{A data frame containing model predictions and the true outcome labels.}
+#'   \item{Train_parest}{A numeric vector of trained regression coefficients (scores).}
 #' }
+#'
+#' @details
+#' This function is intended for internal use within the ADATEST pipeline. It constructs a feature matrix 
+#' from paired taxa OTU counts using a normalization and sorting strategy. A simple linear model is fit 
+#' to predict binary group membership, and the learned coefficients are interpreted as discriminative scores.
 #'
 #' @import phyloseq
 #' @importFrom stats lm
+#' @keywords internal
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' library(phyloseq)
-#' data("GlobalPatterns") # Example dataset
-#' result <- Train_analyze(GlobalPatterns)
-#' print(result$Train_results)
+#' # Assuming you already constructed a pseudo-training object with group labels:
+#' result <- Train_analyze(training_phyloseq_object)
+#' print(result$Train_parest)
 #' }
+
 Train_analyze <- function(data, seed){
   ########## Train data ######
   ## ---------------------------------------------------

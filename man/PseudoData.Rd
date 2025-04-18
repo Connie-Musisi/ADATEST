@@ -2,7 +2,7 @@
 % Please edit documentation in R/Pseudo_data_function.R
 \name{PseudoData}
 \alias{PseudoData}
-\title{PseudoData Function}
+\title{Construct Pseudo Training Dataset for DA Testing (Internal)}
 \usage{
 PseudoData(
   simdata_filter,
@@ -16,52 +16,44 @@ PseudoData(
 )
 }
 \arguments{
-\item{simdata_filter}{A phyloseq object containing the microbiome data.}
+\item{simdata_filter}{A \code{phyloseq} object containing filtered microbiome data.}
 
-\item{t0}{Lower threshold for log fold change (LFC) classification of pseudo taxa (default: 1).}
+\item{group_var}{Character. The name of the grouping variable in the sample metadata. Passed from \code{ADATEST()}.}
 
-\item{t1}{Upper threshold for DA classification (default: 1.5).}
+\item{group_levels}{Character vector of length two. The two levels of \code{group_var} to be compared. Passed from \code{ADATEST()}.}
 
-\item{t2}{Maximum threshold for DA classification (default: +Inf).}
+\item{t0}{Numeric. Lower threshold for classifying non-differential pseudo-taxa. Passed from \code{ADATEST()}.}
 
-\item{empirical_adjust}{Logical; if TRUE, adjusts the pseudo-dataset based on empirical distribution.}
+\item{t1}{Numeric. Threshold for identifying moderate differential abundance. Passed from \code{ADATEST()}.}
 
-\item{n.taxa0}{Number of taxa in the non-DA group, if known (if default (NULL), it is set dynamically
-based on half the total number of taxa.).}
+\item{t2}{Numeric. Upper bound for classifying pseudo-taxa. Passed from \code{ADATEST()}.}
+
+\item{empirical_adjust}{Logical. If \code{TRUE}, downsamples group 2 using an empirical distribution. Passed from \code{ADATEST()}.}
+
+\item{n.taxa0}{Optional. Number of non-DA pseudo-taxa to retain. Passed from \code{ADATEST()}.}
 }
 \value{
-A list containing:
-\item{pseudo_lfc}{Log fold change values of pseudo-taxa.}
-\item{Train}{Training dataset for downstream analysis.}
+A list with components:
+\describe{
+\item{pseudo_lfc}{Vector of log fold changes for pseudo-taxa.}
+\item{delta_med}{Median offset used to center LFCs.}
+\item{lfc_centered}{Centered log fold changes for each pseudo-taxon.}
+\item{Train}{A \code{phyloseq} object containing the training dataset with pseudo-taxa labeled as \code{I_0} or \code{I_1}.}
+}
 }
 \description{
-This function constructs a pseudo-dataset from a given phyloseq object by generating
-artificial pseudo-taxa from the group with the largest sample size. It is designed to
-support differential abundance (DA) analysis while maintaining valid inference without bias.
+Constructs a pseudo-dataset from microbiome data to support adaptive differential abundance (DA) testing.
+This internal function is called by \code{ADATEST()} to generate synthetic pseudo-taxa for model training,
+based on taxon pairing, log fold change (LFC) classification, and optional empirical adjustment.
 }
 \details{
+This function is not intended to be called directly by users. It is part of the internal ADATEST pipeline:
 \enumerate{
-\item \strong{Pseudo-Dataset Construction}: The function selects the group with the largest
-sample size and constructs pseudo-taxa by pairing taxa within this group.
-\item \strong{Empirical Adjustment}: If \code{empirical_adjust = TRUE}, it downsamples data to match
-the original group distribution.
-\item \strong{Differential Abundance Classification}: Log fold changes (LFCs) are computed, and
-pseudo-taxa are categorized into three subsets based on thresholds \code{t0}, \code{t1}, and \code{t2}:
-\itemize{
-\item \code{I_0}: Non-differentially abundant pseudo-taxa.
-\item \code{I_1}: Differentially abundant pseudo-taxa.
-\item \code{I_B}: Biologically irrelevant or extreme DA pseudo-taxa.
+\item Taxa are paired within the reference group to generate pseudo-taxa.
+\item Pseudo-taxa are filtered for prevalence and abundance.
+\item LFCs are computed and centered; taxa are classified into \code{I_0}, \code{I_1}, or \code{I_B}.
+\item The training set includes only pseudo-taxa from \code{I_0} and \code{I_1}.
+\item If needed, empirical resampling balances group sizes before model training.
 }
-\item \strong{Training Dataset Generation}: The final dataset is created by normalizing and
-partitioning pseudo-taxa based on LFC.
 }
-
-This function is useful for developing DA testing procedures that control false
-discovery rates while leveraging synthetic data for statistical power.
-}
-\examples{
-result <- PseudoData(simdata_filter)
-pseudo_lfc <- result$pseudo_lfc
-training_set <- result$Train
-
-}
+\keyword{internal}
