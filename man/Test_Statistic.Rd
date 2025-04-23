@@ -4,10 +4,10 @@
 \alias{Test_Statistic}
 \title{Compute Test Statistic for Differential Abundance Analysis}
 \usage{
-Test_Statistic(org_otu, Train_parest, n1, n2, B)
+Test_Statistic(otu, Train_parest, n1, n2, B)
 }
 \arguments{
-\item{org_otu}{A numeric matrix representing the scaled OTU table from the original dataset, with samples in rows and taxa in columns.}
+\item{otu}{A numeric matrix representing the scaled OTU table from the original dataset, with samples in rows and taxa in columns.}
 
 \item{Train_parest}{A numeric vector of trained regression parameters (scores) obtained from \code{Train_analyze()}.}
 

@@ -50,7 +50,7 @@ A list containing:
 }
 \description{
 This function performs an adaptive differential abundance test (ADATEST) using a permutation-based approach.
-It applies total sum scaling (TSS), trims the dataset to remove taxa that are not prevalent,
+It applies total sum scaling (TSS), trims the dataset to remove taxa that are not prevalent, reaarranges the groups
 subsets the data to create the Pseudo dataset and finally the training dataset,
 performs parameter estimation, conducts a permutation test, and evaluates performance metrics.
 }

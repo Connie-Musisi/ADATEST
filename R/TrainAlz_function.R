@@ -6,6 +6,8 @@
 #' The resulting scores (`Train_parest`) are used downstream for test statistic computation.
 #'
 #' @param data A \code{phyloseq} object containing microbiome training data with taxonomic information and group labels.
+#' @param group_var Character. The name of the grouping variable in the training metadata. Passed from \code{PseudoData()}.
+#' @param group_levels Character vector of length two. The two levels of \code{group_var} to be compared. Passed from \code{PseudoData()}.
 #' @param seed An optional seed-setting expression for reproducibility (default: \code{set.seed(19)}).
 #'
 #' @return A list containing:
@@ -33,7 +35,7 @@
 #' print(result$Train_parest)
 #' }
 
-Train_analyze <- function(data, seed){
+Train_analyze <- function(data,group_var,group_levels,seed){
   ########## Train data ######
   ## ---------------------------------------------------
   ##### Permutation #####
@@ -41,8 +43,7 @@ Train_analyze <- function(data, seed){
   train_I0 <- subset_taxa(data, group_ind == "I_0")
   otu_train_I0 <- otu_table(train_I0, taxa_are_rows = FALSE)
   tax_train_I0 <- tax_table(train_I0)
-  n0<-nrow(otu_train_I0)/2 
-  
+
   # For I1 group
   train_I1 <- subset_taxa(data, group_ind == "I_1")
   
@@ -60,6 +61,13 @@ Train_analyze <- function(data, seed){
   train_I0_perm<-phyloseq(Train_otu_tab_I0,sample_data(data),tax_train_I0)
   train_phy <- merge_phyloseq(train_I0_perm,train_I1)
   
+  samdata <- as.data.frame(sample_data(train_phy))
+  grp_vec <- samdata[[group_var]]
+  n1 <- length(rownames(samdata)[grp_vec == group_levels[1]])
+  n2 <- length(rownames(samdata)[grp_vec == group_levels[2]])
+
+  
+  
   ## ---------------------------------------------------------------------------------------------------------------------
   ############### Linear REGRESSION MODEL #################
   # 1. Extract data
@@ -71,8 +79,8 @@ Train_analyze <- function(data, seed){
   # 2. Prepare data for regression
   # Combine sample data with OTU abundance data
   regression_data1 <- as.matrix(t(otu_abundance1))
-  test_func = function(x){regression_normalized<-Normalize(x[1:n0],
-                                                           x[(n0+1):(2*n0)])
+  test_func = function(x){regression_normalized<-Normalize(x[1:n1],
+                                                           x[(n1+1):(n1+n2)])
   reg11 <- regression_normalized$sample1
   reg21 <- regression_normalized$sample2
   avg_reg11 <- mean(reg11)
@@ -86,8 +94,8 @@ Train_analyze <- function(data, seed){
   
   regression_data1 <- as.data.frame(t(apply(regression_data1,1,test_func)))
   
-  regression_data1 = t(apply(regression_data1,1,function(x){c(sort(as.numeric(x[1:n0]),
-                                                                   decreasing = FALSE),sort(as.numeric(x[c((n0+1):(2*n0))]),
+  regression_data1 = t(apply(regression_data1,1,function(x){c(sort(as.numeric(x[1:n1]),
+                                                                   decreasing = FALSE),sort(as.numeric(x[c((n1+1):(n1+n2))]),
                                                                                             decreasing = FALSE))}))
   
   y <- numeric(nrow(regression_data1))

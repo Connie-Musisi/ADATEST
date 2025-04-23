@@ -4,10 +4,14 @@
 \alias{Train_analyze}
 \title{Train prediction model}
 \usage{
-Train_analyze(data, seed)
+Train_analyze(data, group_var, group_levels, seed)
 }
 \arguments{
 \item{data}{A \code{phyloseq} object containing microbiome training data with taxonomic information and group labels.}
+
+\item{group_var}{Character. The name of the grouping variable in the training metadata. Passed from \code{PseudoData()}.}
+
+\item{group_levels}{Character vector of length two. The two levels of \code{group_var} to be compared. Passed from \code{PseudoData()}.}
 
 \item{seed}{An optional seed-setting expression for reproducibility (default: \code{set.seed(19)}).}
 }

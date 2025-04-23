@@ -4,7 +4,7 @@
 #' Samples are grouped, sorted by abundance, and aligned based on group-level means to reduce noise and enhance interpretability.
 #' This function is used internally by \code{Orig_Alz_Perm()}.
 #'
-#' @param org_otu A numeric matrix representing the scaled OTU table from the original dataset, with samples in rows and taxa in columns.
+#' @param otu A numeric matrix representing the scaled OTU table from the original dataset, with samples in rows and taxa in columns.
 #' @param Train_parest A numeric vector of trained regression parameters (scores) obtained from \code{Train_analyze()}.
 #' @param n1 Integer. Number of samples in group 1. Passed from \code{Orig_Alz_Perm()}.
 #' @param n2 Integer. Number of samples in group 2. Passed from \code{Orig_Alz_Perm()}.
@@ -24,34 +24,45 @@
 #' @keywords internal
 #' @export
 
-Test_Statistic <- function(org_otu, Train_parest, n1, n2, B) {
-  n.taxa <- ncol(org_otu)
-  
-  otu1 <- org_otu[1:n1, ]
-  otu2 <- org_otu[(n1 + 1):(n1 + n2), ]
+Test_Statistic <- function(otu, Train_parest, n1, n2, B) {
+  n.taxa <- ncol(otu)
+  otu1 <- otu[1:n1, , drop = FALSE]
+  otu2 <- otu[(n1 + 1):(n1 + n2), , drop = FALSE]
   
   taxa.means1 <- colMeans(otu1)
   taxa.means2 <- colMeans(otu2)
+  smallest <- ifelse(taxa.means1 - taxa.means2 < 0, 1, 2)
   
-  # Identify group with smaller mean
-  smallest <- ifelse(taxa.means1 - taxa.means2 < 0, 1, 2) 
+  # Pad the sorted data to equal lengths (max(n1, n2)) using last value
+  pad_sort <- function(x, len) {
+    x_sorted <- sort(x)
+    if (length(x_sorted) < len) {
+      pad <- rep(tail(x_sorted, 1), len - length(x_sorted))
+      return(c(x_sorted, pad))
+    } else {
+      return(x_sorted)
+    }
+  }
   
-  # Sort within groups
-  otu1.sorted <- t(apply(otu1, 2, sort, decreasing = FALSE))
-  otu2.sorted <- t(apply(otu2, 2, sort, decreasing = FALSE))
+  max_n <- max(n1, n2)
+  otu1.sorted <- t(apply(otu1, 2, pad_sort, len = max_n))
+  otu2.sorted <- t(apply(otu2, 2, pad_sort, len = max_n))
   
-  # Align groups based on mean abundance
-  select1 <- (smallest == 1)  
-  select2 <- (smallest == 2)  
+  # Now fill final matrix of size: n.taxa × (n1 + n2)
   otu.final <- matrix(nrow = n.taxa, ncol = (n1 + n2))
   
-  otu.final[select1, (n1 + 1):(n1 + n2)] <- otu2.sorted[select1, , drop = FALSE]
-  otu.final[select1, 1:n1] <- otu1.sorted[select1, , drop = FALSE]
-  otu.final[select2, (n1 + 1):(n1 + n2)] <- otu1.sorted[select2, 1:n2, drop = FALSE]
-  otu.final[select2, 1:n2] <- otu2.sorted[select2, 1:n2, drop = FALSE]
+  # For taxa where group 1 is smaller
+  sel1 <- smallest == 1
+  otu.final[sel1, 1:n1] <- otu1.sorted[sel1, 1:n1, drop = FALSE]
+  otu.final[sel1, (n1 + 1):(n1 + n2)] <- otu2.sorted[sel1, 1:n2, drop = FALSE]
   
-  # Compute test statistic using estimated parameters
+  # For taxa where group 2 is smaller
+  sel2 <- smallest == 2
+  otu.final[sel2, 1:n2] <- otu2.sorted[sel2, 1:n2, drop = FALSE]
+  otu.final[sel2, (n2 + 1):(n2 + n1)] <- otu1.sorted[sel2, 1:n1, drop = FALSE]
+  
+  # Apply test statistic
   org_pred <- otu.final %*% Train_parest
   
-  return(stats = org_pred)
+  return(org_pred)
 }
