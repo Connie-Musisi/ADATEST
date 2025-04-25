@@ -74,6 +74,20 @@ PseudoData <- function(simdata_filter,
     n.taxa0 <- round(n.taxa / 2)
   }
   
+  # Compute delta_med from original data (median of log2 fold-change)
+  if (taxa_are_rows(simdata_filter)) {
+    simdata_otu <- as.data.frame(t(otu_table(simdata_filter)))
+  } else {
+    simdata_otu <- as.data.frame(otu_table(simdata_filter))
+  }
+  
+  simdata_mean_group1 <- rowMeans(as.data.frame(otu_table(simdata_group1)))
+  simdata_mean_group2 <- rowMeans(as.data.frame(otu_table(simdata_group2)))
+  
+  sim.min.wozero <- apply(simdata_otu, 2, function(x) { min(x[x != 0]) })
+  simdata_lfc <- log2((simdata_mean_group2 + sim.min.wozero) / (simdata_mean_group1 + sim.min.wozero))
+  delta_med <- median(simdata_lfc, na.rm = TRUE)
+  
   # Get the taxon names from the OTU table
   taxon_names <- taxa_names(simdata_group1)
   taxon_name_pairs <- c()
@@ -91,6 +105,18 @@ PseudoData <- function(simdata_filter,
       combined_paired_otu <- cbind(combined_paired_otu, rbind(pairotu_subgroup1, pairotu_subgroup2))
     }
   }
+  # filter pseudo‐taxa by delta_p > delta_med
+  lfc_pairs <- apply(combined_paired_otu, 2, function(col) {
+    # first n1 rows are group1, next n2 are group2
+    g1 <- col[1:n_samples_group1]
+    g2 <- col[(n_samples_group1 + 1):(n_samples_group1 + n_samples_group2)]
+    # add a pseudocount = smallest non‐zero in the column
+    min_nz <- min(col[col != 0], na.rm = TRUE)
+    log2((mean(g2) + min_nz) / (mean(g1) + min_nz))
+  })
+  keep_delta <- lfc_pairs > delta_med
+  combined_paired_otu <- combined_paired_otu[, keep_delta]
+  taxon_name_pairs  <- taxon_name_pairs[keep_delta]  # if you already applied idx.keep, or just taxon_name_pairs[keep_delta] if not
   
   # Remove taxa with too many zeroes 
   idx.keep.freq0 <- apply(combined_paired_otu, 2, function(x) { mean(x == 0) }) < 0.8
@@ -145,8 +171,6 @@ PseudoData <- function(simdata_filter,
   
   min.without.zero <- apply(otu_train_filter, 2, function(x) { min(x[x != 0]) })
   log_fold_change <- log2((mean_group2 + min.without.zero) / (mean_group1 + min.without.zero))
-  # Calculate δ_med as the median of the log fold changes
-  delta_med <- median(log_fold_change, na.rm = TRUE)
   
   # Center the log fold changes
   lfc_centered <- log_fold_change - delta_med
