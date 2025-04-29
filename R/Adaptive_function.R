@@ -38,8 +38,6 @@ ADATEST <- function(physeq, group_var = "group",
   # Trimming
   simdata_filter <- signtrans::Trim(simdata_filter,minReads = 0.001, minPrev = 0.20) 
   
-  simdata_filter <- transform_sample_counts(simdata_filter, function(x) { x / sum(x)})  
-  
   # Renormalize after trimming
   simdata_filter <- transform_sample_counts(simdata_filter, function(x) { x / sum(x)})  
   
