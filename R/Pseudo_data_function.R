@@ -195,7 +195,8 @@ PseudoData <- function(simdata_filter,
   train_taxa <- c(taxa_I0, taxa_I1)
   train_pruned <- prune_taxa(train_taxa, train_final)
   
-  return(list(pseudo_lfc = log_fold_change,
+  return(list(orig_lfc=simdata_lfc,
+              pseudo_lfc = log_fold_change,
               delta_med = delta_med,
               lfc_centered = lfc_centered,
               Train = train_pruned))
