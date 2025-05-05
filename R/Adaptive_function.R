@@ -90,6 +90,9 @@ ADATEST <- function(physeq, group_var = "group",
   return(list(Original_results = Orig_results,
               Unscaled_data = list(Train_data = Train_nan, Original_data = simdata_filter),
               Train_results = Train_res,
-              Pseudo = list(Pseudo_Train$delta_med, Pseudo_Train$lfc_centered, Pseudo_Train$pseudo_lfc)
+              Pseudo = list(delta_med=Pseudo_Train$delta_med, 
+                            lfc_centered=Pseudo_Train$lfc_centered, 
+                            orig_lfc=Pseudo_Train$orig_lfc,
+                            pseudo_lfc=Pseudo_Train$pseudo_lfc)
   ))
 }
