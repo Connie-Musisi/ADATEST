@@ -33,16 +33,19 @@ ADATEST <- function(physeq, group_var = "group",
                     n.taxa0=NULL,
                     seed=set.seed(19)){
   # Total Sum Scaling
-  simdata_filter <- transform_sample_counts(physeq, function(x) { x / sum(x)})
+  simdata_tss <- transform_sample_counts(physeq, function(x) { x / sum(x)})
   
   # Trimming
-  simdata_filter <- signtrans::Trim(simdata_filter,minReads = 0.001, minPrev = 0.20) 
+  simdata_filter <- signtrans::Trim(simdata_tss,minReads = 0.001, minPrev = 0.20) 
   
   # Renormalize after trimming
-  simdata_filter <- transform_sample_counts(simdata_filter, function(x) { x / sum(x)})  
+  simdata_tss2 <- transform_sample_counts(simdata_filter, function(x) { x / sum(x)})  
+
+  print(simdata_tss2)
+
   
   # Reorder data so that the group with more samples comes first (n1>n2)
-  samdata <- as.data.frame(sample_data(simdata_filter))
+  samdata <- as.data.frame(sample_data(simdata_tss2))
   grp_vec <- samdata[[group_var]]
   counts <- table(grp_vec)
   if(counts[group_levels[1]] >= counts[group_levels[2]]) {
@@ -55,20 +58,20 @@ ADATEST <- function(physeq, group_var = "group",
   ordered_samps <- c(rownames(samdata)[grp_vec == primary],
                      rownames(samdata)[grp_vec == secondary])
   samdata <- samdata[ordered_samps, , drop = FALSE]
-  sample_data(simdata_filter) <- sample_data(samdata)
-  if (taxa_are_rows(simdata_filter)) {
-    otu_mat <- as(otu_table(simdata_filter), "matrix")
+  sample_data(simdata_tss2) <- sample_data(samdata)
+  if (taxa_are_rows(simdata_tss2)) {
+    otu_mat <- as(otu_table(simdata_tss2), "matrix")
     otu_mat <- otu_mat[, ordered_samps]
-    otu_table(simdata_filter) <- otu_table(otu_mat, taxa_are_rows = TRUE)
+    otu_table(simdata_tss2) <- otu_table(otu_mat, taxa_are_rows = TRUE)
   } else {
-    otu_mat <- as(otu_table(simdata_filter), "matrix")
+    otu_mat <- as(otu_table(simdata_tss2), "matrix")
     otu_mat <- otu_mat[ordered_samps, ]
-    otu_table(simdata_filter) <- otu_table(otu_mat, taxa_are_rows = FALSE)
+    otu_table(simdata_tss2) <- otu_table(otu_mat, taxa_are_rows = FALSE)
   }
   
   cat("running DATA")
   # Subset data for training
-  Pseudo_Train <- PseudoData(simdata_filter, group_var = group_var, 
+  Pseudo_Train <- PseudoData(simdata_tss2, group_var = group_var, 
                              group_levels = c(primary,secondary),
                              t0 = t0, t1, n.taxa0 = n.taxa0, t2, 
                              empirical_adjust = empirical_adjust)
@@ -81,14 +84,14 @@ ADATEST <- function(physeq, group_var = "group",
   
   # Permutation Test
   cat("running permutation test")
-  Orig_results <- Orig_Alz_Perm(simdata_filter, group_var = group_var,
+  Orig_results <- Orig_Alz_Perm(simdata_tss2, group_var = group_var,
                                 group_levels = c(primary,secondary), 
                                 Train_parest = Train_res$Train_parest, 
                                 p.adjust.method = p.adjust.method, B = B)
   
   
   return(list(Original_results = Orig_results,
-              Unscaled_data = list(Train_data = Train_nan, Original_data = simdata_filter),
+              Unscaled_data = list(Train_data = Train_nan, Original_data = simdata_tss2),
               Train_results = Train_res,
               Pseudo = list(delta_med=Pseudo_Train$delta_med, 
                             lfc_centered=Pseudo_Train$lfc_centered, 
