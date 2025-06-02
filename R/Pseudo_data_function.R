@@ -4,7 +4,7 @@
 #' This internal function is called by \code{ADATEST()} to generate synthetic pseudo-taxa for model training, 
 #' based on taxon pairing, log fold change (LFC) classification, and optional empirical adjustment.
 #'
-#' @param simdata_filter A \code{phyloseq} object containing filtered microbiome data.
+#' @param data A \code{phyloseq} object containing filtered microbiome data.
 #' @param group_var Character. The name of the grouping variable in the sample metadata. Passed from \code{ADATEST()}.
 #' @param group_levels Character vector of length two. The two levels of \code{group_var} to be compared. Passed from \code{ADATEST()}.
 #' @param t0 Numeric. Lower threshold for classifying non-differential pseudo-taxa. Passed from \code{ADATEST()}.
@@ -35,7 +35,7 @@
 #' @import phyloseq
 #' @export
 
-PseudoData <- function(simdata_filter,
+PseudoData <- function(data,
                        group_var,
                        group_levels,
                        t0, 
@@ -45,12 +45,12 @@ PseudoData <- function(simdata_filter,
                        n.taxa0) {
   
   
-  samdata <- as.data.frame(sample_data(simdata_filter))
+  samdata <- as.data.frame(sample_data(data))
   grp_vec <- samdata[[group_var]]
   
   # Subset based on the group variable directly for group 1
   samps_grp1 <- rownames(samdata)[grp_vec == group_levels[1]]
-  simdata_group1 <- prune_samples(samps_grp1, simdata_filter)
+  simdata_group1 <- prune_samples(samps_grp1, data)
   if (taxa_are_rows(simdata_group1)) {
     otutab_group1 <- t(otu_table(simdata_group1))
   } else {
@@ -60,7 +60,7 @@ PseudoData <- function(simdata_filter,
   
   # Subset for group 2 using the same direct approach
   samps_grp2 <- rownames(samdata)[grp_vec == group_levels[2]]
-  simdata_group2 <- prune_samples(samps_grp2, simdata_filter)
+  simdata_group2 <- prune_samples(samps_grp2, data)
   if (taxa_are_rows(simdata_group2)) {
     otutab_group2 <- t(otu_table(simdata_group2))
   } else {
@@ -76,9 +76,9 @@ PseudoData <- function(simdata_filter,
   
   # Compute delta_med from original data (median of log2 fold-change)
   if (taxa_are_rows(simdata_filter)) {
-    simdata_otu <- as.data.frame(t(otu_table(simdata_filter)))
+    simdata_otu <- as.data.frame(t(otu_table(data)))
   } else {
-    simdata_otu <- as.data.frame(otu_table(simdata_filter))
+    simdata_otu <- as.data.frame(otu_table(data))
   }
   
   simdata_mean_group1 <- rowMeans(as.data.frame(otu_table(simdata_group1)))
@@ -156,8 +156,8 @@ PseudoData <- function(simdata_filter,
     
     train_otu_table <- otu_table(rbind(otu_table_new[1:n_samples_group1, ],
                                        redtrain_group2), taxa_are_rows = FALSE)
-    rownames(train_otu_table) <- rownames(simdata_filter@sam_data)
-    train_sample_data <- sample_data(simdata_filter)[, "group"]
+    rownames(train_otu_table) <- rownames(data@sam_data)
+    train_sample_data <- sample_data(data)[, "group"]
     training_data <- phyloseq(train_otu_table, tax_data, train_sample_data)
   }
   
