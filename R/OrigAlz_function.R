@@ -28,13 +28,13 @@
 #' @import qvalue
 #' @importFrom stats p.adjust
 #' @export
-Orig_Alz_Perm <- function(simdata_filter, Train_parest, B,
+Orig_Alz_Perm <- function(data, Train_parest, B,
                           p.adjust.method,
                           group_var,
                           group_levels){
   #set.seed(19)
   ############# Analyzing Original data ################
-  org_data <- simdata_filter
+  org_data <- data
   Org_tax <- as.data.frame(tax_table(org_data))
   
   if(taxa_are_rows(org_data)){
@@ -42,11 +42,11 @@ Orig_Alz_Perm <- function(simdata_filter, Train_parest, B,
   }else{
     org_otu <- as.matrix(otu_table(org_data))
   }
-  samdata <- sample_data(simdata_filter)[,group_var]
+  samdata <- sample_data(data)[,group_var]
   n1 <- sum(samdata == group_levels[1])
   n2 <- sum(samdata == group_levels[2])
   
-  n.taxa<-nrow(simdata_filter@tax_table)
+  n.taxa<-nrow(data@tax_table)
   
   tmp<-sapply(1:n.taxa, FUN=function(i) {
     d<-Normalize(org_otu[1:n1,i],
