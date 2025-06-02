@@ -3,7 +3,7 @@
 #' This function computes a test statistic for each taxon in a microbiome dataset using estimated scores.
 #' It then performs a permutation test to assess statistical significance and adjusts p-values for false discovery rate (FDR) control.
 #'
-#' @param simdata_filter A phyloseq object containing filtered microbiome data (after TSS and trimming).
+#' @param data A phyloseq object containing filtered microbiome data (after TSS and trimming).
 #' @param Train_parest A numeric vector of parameter estimates from the training data, used to compute the test statistic.
 #' @param B Integer. Number of permutations to perform.  Passed from \code{ADATEST()}.
 #' @param p.adjust.method Character string specifying the p-value adjustment method. Passed from \code{ADATEST()}.
