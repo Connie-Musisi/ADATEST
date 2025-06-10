@@ -28,7 +28,7 @@
 #' @import qvalue
 #' @importFrom stats p.adjust
 #' @export
-Orig_Alz_Perm <- function(data, Train_parest, B,
+OrigAlz <- function(data, Train_parest, B,
                           p.adjust.method,
                           group_var,
                           group_levels){
