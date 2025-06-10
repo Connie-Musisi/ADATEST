@@ -24,7 +24,7 @@
 #' @keywords internal
 #' @export
 
-Test_Statistic <- function(otu, Train_parest, n1, n2, B) {
+TestStat <- function(otu, Train_parest, n1, n2, B) {
   n.taxa <- ncol(otu)
   otu1 <- otu[1:n1, , drop = FALSE]
   otu2 <- otu[(n1 + 1):(n1 + n2), , drop = FALSE]
