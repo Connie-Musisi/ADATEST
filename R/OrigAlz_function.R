@@ -58,7 +58,7 @@ OrigAlz <- function(data, Train_parest, B,
   otu_scaled<-rbind(otu1,otu2)
   
   
-  stat.obs<-Test_Statistic(otu_scaled,Train_parest, n1=n1, n2=n2, B=B)
+  stat.obs<-TestStat(otu_scaled,Train_parest, n1=n1, n2=n2, B=B)
   set.seed(19)
   # Permutation null distributions
   nd<-matrix(nrow=B,ncol=n.taxa)
