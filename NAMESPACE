@@ -2,10 +2,10 @@
 
 export(ADATEST)
 export(Adjust2Median)
-export(NA.remove)
 export(Normalize)
 export(OrigAlz)
 export(PseudoData)
+export(Remove_NAs)
 export(TestStat)
 export(TrainAlz)
 export(eval)
