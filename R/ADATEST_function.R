@@ -138,9 +138,9 @@ ADATEST <- function(physeq, group_var = "group",
               Unscaled_data = list(Train_data = Train_nan, Original_data = simdata_tss2),
               Scaled_data = list(Train_scaled=Train_res$Train_scaled, Original_scaled=Orig_results$org_scaled),
               data_Adjust2Median = simdata_adjusted, 
-              p_value = Original_results$p,
-              p_adj = Original_results$p.adjusted,
-              test_statistic = Original_results$Stat_Obs
+              p_value = Orig_results$p,
+              p_adj = Orig_results$p.adjusted,
+              test_statistic = Orig_results$Stat_Obs
               
   ))
 }
