@@ -35,7 +35,7 @@
 #' print(result$Train_parest)
 #' }
 
-Train_analyze <- function(data,group_var,group_levels,seed){
+TrainAlz <- function(data,group_var,group_levels,seed){
   ########## Train data ######
   ## ---------------------------------------------------
   ##### Permutation #####
