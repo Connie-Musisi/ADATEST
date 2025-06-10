@@ -80,7 +80,7 @@ ADATEST <- function(physeq, group_var = "group",
   simdata_tss2 <- transform_sample_counts(simdata_filter, function(x) { x / sum(x)})  
 
    # Adjust to median (your custom function)
-  simdata_adjusted <- Adjust2AvgProfile(simdata_tss2)
+  simdata_adjusted <- Adjust2Median(simdata_tss2)
   
   print(simdata_adjusted)
 
