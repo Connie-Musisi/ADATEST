@@ -35,7 +35,8 @@
 #' print(result$Train_parest)
 #' }
 
-TrainAlz <- function(data,group_var,group_levels,seed){
+TrainAlz <- function(data,group_var = "new_group",
+                     group_levels = c("0", "1"),seed){
   ########## Train data ######
   ## ---------------------------------------------------
   ##### Permutation #####
@@ -43,7 +44,7 @@ TrainAlz <- function(data,group_var,group_levels,seed){
   train_I0 <- subset_taxa(data, group_ind == "I_0")
   otu_train_I0 <- otu_table(train_I0, taxa_are_rows = FALSE)
   tax_train_I0 <- tax_table(train_I0)
-
+  
   # For I1 group
   train_I1 <- subset_taxa(data, group_ind == "I_1")
   
@@ -65,7 +66,7 @@ TrainAlz <- function(data,group_var,group_levels,seed){
   grp_vec <- samdata[[group_var]]
   n1 <- length(rownames(samdata)[grp_vec == group_levels[1]])
   n2 <- length(rownames(samdata)[grp_vec == group_levels[2]])
-
+  
   
   
   ## ---------------------------------------------------------------------------------------------------------------------
@@ -85,13 +86,25 @@ TrainAlz <- function(data,group_var,group_levels,seed){
   reg21 <- regression_normalized$sample2
   avg_reg11 <- mean(reg11)
   avg_reg21 <- mean(reg21)
-  if(avg_reg21 < avg_reg11){
-    return(c(reg21, reg11))
-  }
-  else {
+  # after Normalize() gives you reg11 (len = n1) and reg21 (len = n2)
+  if (mean(reg21) < mean(reg11)) {
+    # swapping—so reg21 must become the first block of length n1:
+    reg21_up <- if(length(reg21)!=n1) {
+      ec <- ecdf(reg21)
+      quantile(ec, runif(n1), type = 8)
+    } else reg21
+    
+    # and reg11 must become the second block of length n2:
+    reg11_down <- if(length(reg11)!=n2) {
+      ec <- ecdf(reg11)
+      quantile(ec, runif(n2), type = 8)
+    } else reg11
+    
+    return(c(reg21_up, reg11_down))
+  } else {
+    # no swap—just sort and keep lengths n1, n2
     return(c(reg11, reg21))
-  }}
-  
+  }} 
   regression_data1 <- as.data.frame(t(apply(regression_data1,1,test_func)))
   
   regression_data1 = t(apply(regression_data1,1,function(x){c(sort(as.numeric(x[1:n1]),
@@ -131,3 +144,4 @@ TrainAlz <- function(data,group_var,group_levels,seed){
               Train_results=Train_results,
               Train_parest=Train_parest))
 }
+

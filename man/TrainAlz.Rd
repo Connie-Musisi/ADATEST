@@ -4,7 +4,7 @@
 \alias{TrainAlz}
 \title{Train prediction model}
 \usage{
-TrainAlz(data, group_var, group_levels, seed)
+TrainAlz(data, group_var = "new_group", group_levels = c("0", "1"), seed)
 }
 \arguments{
 \item{data}{A \code{phyloseq} object containing microbiome training data with taxonomic information and group labels.}

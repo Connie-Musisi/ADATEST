@@ -4,7 +4,7 @@
 \alias{Adjust2Median}
 \title{Adjust Counts to Median Fold-Change Between Two Groups}
 \usage{
-Adjust2Median(data)
+Adjust2Median(data, group_var, group_levels)
 }
 \arguments{
 \item{data}{A \code{phyloseq} object. It must contain an OTU table

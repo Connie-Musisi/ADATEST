@@ -28,10 +28,11 @@
 #' @import qvalue
 #' @importFrom stats p.adjust
 #' @export
+
 OrigAlz <- function(data, Train_parest, B,
-                          p.adjust.method,
-                          group_var,
-                          group_levels){
+                    p.adjust.method,
+                    group_var,
+                    group_levels){
   #set.seed(19)
   ############# Analyzing Original data ################
   org_data <- data

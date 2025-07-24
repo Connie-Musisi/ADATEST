@@ -34,31 +34,32 @@
 #' }
 #'
 #' @export
-Adjust2Median <- function(data) {
+Adjust2Median <- function(data,group_var,group_levels) {
   # Extract and transpose OTU count matrix
-if(taxa_are_rows(data)){
-  tmp <- t(otu_table(data))
-}
+  if(taxa_are_rows(data)){
+    tmp <- t(otu_table(data))
+  }
   # Extract grouping variable (0/1)
-  group <- sample_data(data)$group
-
+  samdata <- as.data.frame(sample_data(data))
+  grp_vec <- samdata[[group_var]]
+  
   # Compute pseudocount for each taxon as the minimum non-zero count
   min.without.zero <- apply(tmp, 2, FUN = function(x) {
     min(x[x != 0], na.rm = TRUE)
   })
-
+  
   # Calculate log2 fold-changes between groups, adding pseudocount
-  lfc2 <- log2((colMeans(tmp[group == 1, ] + min.without.zero)) /
-               (colMeans(tmp[group == 0, ] + min.without.zero)))
-
+  lfc2 <- log2((colMeans(tmp[grp_vec == group_levels[2], ] + min.without.zero)) /
+                 (colMeans(tmp[grp_vec == group_levels[1], ] + min.without.zero)))
+  
   # Calculate median fold-change factor
   med0 <- 2^median(lfc2)
-
+  
   # Scale counts in group 0 by median fold-change
-  tmp[group == 0, ] <- tmp[group == 0, ] * med0
-
+  tmp[grp_vec == group_levels[1], ] <- tmp[grp_vec == group_levels[1], ] * med0
+  
   # Reconstruct phyloseq object with adjusted OTU counts
   physeq <- phyloseq(t(tmp), tax_table(data), sample_data(data))
-
+  
   return(physeq)
 }

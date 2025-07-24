@@ -33,7 +33,8 @@
 #' @import phyloseq
 #' @export
 
-PseudoData <- function(simdata_filter,
+
+PseudoData <- function(data,
                        group_var,
                        group_levels,
                        t0, 
@@ -42,19 +43,18 @@ PseudoData <- function(simdata_filter,
                        empirical_adjust,
                        n.taxa0) {
   
-  samdata <- as.data.frame(sample_data(simdata_filter))
+  samdata <- as.data.frame(sample_data(data))
   grp_vec <- samdata[[group_var]]
   
   # Subset samples for each group
   samps_grp1 <- rownames(samdata)[grp_vec == group_levels[1]]
   samps_grp2 <- rownames(samdata)[grp_vec == group_levels[2]]
   
-  simdata_group1 <- prune_samples(samps_grp1, simdata_filter)
-  simdata_group2 <- prune_samples(samps_grp2, simdata_filter)
+  simdata_group1 <- prune_samples(samps_grp1, data)
+  simdata_group2 <- prune_samples(samps_grp2, data)
   
   otutab_group1 <- if (taxa_are_rows(simdata_group1)) t(otu_table(simdata_group1)) else otu_table(simdata_group1)
-  otutab_group2 <- if (taxa_are_rows(simdata_group2)) t(otu_table(simdata_group2)) else otu_table(simdata_group2)
-  
+  otutab_group2 <- if (taxa_are_rows(simdata_group2)) t(otu_table(simdata_group2)) else otu_table(simdata_group2)  
   n_samples_group1 <- nrow(otutab_group1)
   n_samples_group2 <- nrow(otutab_group2)
   n.taxa <- ncol(otutab_group1)
@@ -84,7 +84,7 @@ PseudoData <- function(simdata_filter,
     g1 <- col[1:n_samples_group1]
     g2 <- col[(n_samples_group1 + 1):(n_samples_group1 + n_samples_group2)]
     min_nz <- min(col[col != 0], na.rm = TRUE)
-    log2((mean(g2) + min_nz) / (mean(g1) + min_nz))
+    log2(mean(g2 + min_nz) / mean(g1 + min_nz))
   })
   
   # Keep all pseudo-taxa (or optionally filter by abs(LFC) > threshold)
@@ -101,7 +101,7 @@ PseudoData <- function(simdata_filter,
   rownames(tax_data) <- taxon_name_pairs
   colnames(tax_data) <- "Pseudo_taxon"
   
-  samdata_new <- rbind(sample_data(simdata_group1), sample_data(simdata_group2))
+  samdata_new <- rbind(sample_data(simdata_group1), sample_data(simdata_group1))
   samdata_new <- sample_data(as.data.frame(samdata_new))
   
   otu_table_new <- otu_table(combined_paired_otu, taxa_are_rows = FALSE)
@@ -111,42 +111,71 @@ PseudoData <- function(simdata_filter,
   training_data <- phyloseq(otu_table_new, tax_data, samdata_new)
   
   # Optional: downsample group 2 via empirical adjustment
+  # Optional: downsample group 2 via empirical adjustment
   if (empirical_adjust) {
-    train_group2 <- otu_table_new[(n_samples_group1 + 1):(2 * n_samples_group1), ]
+    # 1) Extract the second half of the paired OTU table (rows n1+1 to 2*n1)
+    train_group2 <- otu_table_new[(n_samples_group1 + 1):(2 * n_samples_group1), , drop = FALSE]
+    
+    # 2) ECDF down‐sampling of that block to length n_samples_group2
     redtrain_group2 <- apply(train_group2, 2, function(x) {
       set.seed(19)
       emp_dist <- ecdf(x)
-      quantile(emp_dist, probs = runif(n_samples_group2))
+      quantile(emp_dist, probs = runif(n_samples_group2), type = 8)
     })
-    train_otu_table <- otu_table(rbind(otu_table_new[1:n_samples_group1, ],
-                                       redtrain_group2), taxa_are_rows = FALSE)
-    rownames(train_otu_table) <- rownames(simdata_filter@sam_data)
-    train_sample_data <- sample_data(simdata_filter)[, group_var, drop = FALSE]
+    
+    # 3) Recombine the first n1 rows with the new n2 rows → (n1 + n2) rows
+    train_mat       <- rbind(
+      otu_table_new[1:n_samples_group1, , drop = FALSE],
+      redtrain_group2
+    )
+    train_otu_table <- otu_table(train_mat, taxa_are_rows = FALSE)
+    
+    # 4) Build matching sample_data of length (n1 + n2)
+    #    a) original group1 samples (first n1)
+    samp1 <- as(sample_data(simdata_group1), "data.frame")[1:n_samples_group1, , drop = FALSE]
+    #    b) original group2 samples (first n2)
+    samp2 <- as(sample_data(simdata_group2), "data.frame")[1:n_samples_group2, , drop = FALSE]
+    samp_df <- rbind(samp1, samp2)
+    rownames(samp_df) <- rownames(train_mat)
+    train_sample_data <- sample_data(samp_df)
+    
+    # 5) Reconstruct the phyloseq object
     training_data <- phyloseq(train_otu_table, tax_data, train_sample_data)
   }
   
-  # Compute log-fold change again (on final training data)
+  # Now compute LFCs on the final training data
   otu_train_filter <- training_data@otu_table
-  data_group1 <- otu_train_filter[1:n_samples_group1, ]
-  data_group2 <- otu_train_filter[(n_samples_group1 + 1):(n_samples_group1 + n_samples_group2), ]
+  data_group1     <- otu_train_filter[1:n_samples_group1, , drop = FALSE]
+  data_group2     <- otu_train_filter[
+    (n_samples_group1 + 1):(n_samples_group1 + n_samples_group2), , drop = FALSE
+  ]
   
-  mean_group1 <- colMeans(data_group1)
-  mean_group2 <- colMeans(data_group2)
-  min.without.zero <- apply(otu_train_filter, 2, function(x) min(x[x != 0]))
-  log_fold_change <- log2((mean_group2 + min.without.zero) / (mean_group1 + min.without.zero))
+  mean_group1     <- colMeans(data_group1)
+  mean_group2     <- colMeans(data_group2)
+  min.without.zero<- apply(otu_train_filter, 2, function(x) min(x[x != 0]))
+  log_fold_change <- log2((mean_group2 + min.without.zero) / 
+                            (mean_group1 + min.without.zero))
   
-  # Label pseudo-taxa based on raw LFC
+  # Label pseudo-taxa
   tax_df <- as.data.frame(tax_table(training_data))
-  tax_df$lfc <- log_fold_change
-  tax_df$group_ind <- ifelse(abs(log_fold_change) < t0, "I_0",
-                             ifelse(abs(log_fold_change) > t1 & abs(log_fold_change) < t2, "I_1", "I_B"))
+  tax_df$lfc      <- log_fold_change
+  tax_df$group_ind<- ifelse(
+    abs(log_fold_change) < t0, "I_0",
+    ifelse(abs(log_fold_change) > t1 & abs(log_fold_change) < t2, "I_1", "I_B")
+  )
   
-  # Add group info to sample_data
-  sample_df <- as.data.frame(sample_data(training_data))
-  sample_df$new_group <- c(rep(0, n_samples_group1), rep(1, n_samples_group2))
-  sample_data_new <- sample_data(sample_df)
+  # Add new_group to sample_data
+  sample_df       <- as.data.frame(sample_data(training_data))
+  sample_df$new_group <- c(
+    rep(0, n_samples_group1),
+    rep(1, n_samples_group2)
+  )
+  train_final <- phyloseq(
+    otu_table(training_data),
+    sample_data(sample_df),
+    tax_table(as.matrix(tax_df))
+  )
   
-  train_final <- phyloseq(otu_table(training_data), sample_data_new, tax_table(as.matrix(tax_df)))
   
   # Keep only I0 and I1 pseudo-taxa
   taxa_I0 <- tax_df$Pseudo_taxon[tax_df$group_ind == "I_0"]
@@ -159,4 +188,3 @@ PseudoData <- function(simdata_filter,
     Train = train_pruned
   ))
 }
-

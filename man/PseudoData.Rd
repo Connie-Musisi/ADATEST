@@ -5,7 +5,7 @@
 \title{Construct Pseudo Training Dataset for DA Testing (Internal)}
 \usage{
 PseudoData(
-  simdata_filter,
+  data,
   group_var,
   group_levels,
   t0,
@@ -16,6 +16,8 @@ PseudoData(
 )
 }
 \arguments{
+\item{data}{A \code{phyloseq} object containing filtered microbiome data.}
+
 \item{group_var}{Character. The name of the grouping variable in the sample metadata. Passed from \code{ADATEST()}.}
 
 \item{group_levels}{Character vector of length two. The two levels of \code{group_var} to be compared. Passed from \code{ADATEST()}.}
@@ -29,8 +31,6 @@ PseudoData(
 \item{empirical_adjust}{Logical. If \code{TRUE}, downsamples group 2 using an empirical distribution. Passed from \code{ADATEST()}.}
 
 \item{n.taxa0}{Optional. Number of non-DA pseudo-taxa to retain. Passed from \code{ADATEST()}.}
-
-\item{data}{A \code{phyloseq} object containing filtered microbiome data.}
 }
 \value{
 A list with components:

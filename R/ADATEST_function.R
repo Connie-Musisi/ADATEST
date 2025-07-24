@@ -78,12 +78,12 @@ ADATEST <- function(physeq, group_var = "group",
   
   # Renormalize after trimming
   simdata_tss2 <- transform_sample_counts(simdata_filter, function(x) { x / sum(x)})  
-
-   # Adjust to median (your custom function)
-  simdata_adjusted <- Adjust2Median(simdata_tss2)
+  
+  # Adjust to median (your custom function)
+  simdata_adjusted <- Adjust2Median(simdata_tss2, group_levels=group_levels, group_var = group_var)
   
   print(simdata_adjusted)
-
+  
   
   # Reorder data so that the group with more samples comes first (n1>n2)
   samdata <- as.data.frame(sample_data(simdata_adjusted))
@@ -123,14 +123,15 @@ ADATEST <- function(physeq, group_var = "group",
   
   Train_nan <- Remove_NAs(Train)
   Train_res <- TrainAlz(Train_nan,group_var = "new_group", 
-                             group_levels = c("0","1"), seed=seed) 
+                        group_levels = c("0","1"), 
+                        seed=seed) 
   
   # Permutation Test
   cat("running permutation test")
   Orig_results <- OrigAlz(simdata_adjusted, group_var = group_var,
-                                group_levels = c(primary,secondary), 
-                                Train_parest = Train_res$Train_parest, 
-                                p.adjust.method = p.adjust.method, B = B)
+                          group_levels = c(primary,secondary), 
+                          Train_parest = Train_res$Train_parest, 
+                          p.adjust.method = p.adjust.method, B = B)
   
   return(list(Original_results = Orig_results,
               Train_results = Train_res,
