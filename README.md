@@ -11,3 +11,6 @@ devtools::install_github("Connie-Musisi/ADATEST")
 ```
 ## Code
 See example vignette for more explanation on how to use ADATEST on a real dataset.
+
+## Data Aavilability
+The simulated datasets can be found in the  folder SimData
