@@ -14,3 +14,9 @@ See example vignette for more explanation on how to use ADATEST on a real datase
 
 ## Data Aavilability
 The simulated datasets can be found in the  folder SimData
+
+## Simulations
+
+## Analysis
+
+## Results
