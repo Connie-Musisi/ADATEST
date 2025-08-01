@@ -9,8 +9,6 @@ install.packages("devtools")
 library(devtools)
 devtools::install_github("Connie-Musisi/ADATEST")
 ```
-## Code
-See example vignette for more explanation on how to use ADATEST on a real dataset.
 
 ## Data Aavilability
 All data supporting the findings of this study are publicly available in this repository:
@@ -20,6 +18,9 @@ Simulated data: The simulated Data is located in the SimData/IBD and SimData/Die
 Analysis: Full R scripts used to generate results can be found in the AnalysisCode/ folder.
 
 Results: Results: Processed results, including test statistics and FDR-adjusted p-values, are provided in Excel format in the Results/ directory.
+
+## Example
+See example vignette for more explanation on how to use ADATEST on a real dataset.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
