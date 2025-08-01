@@ -13,11 +13,17 @@ devtools::install_github("Connie-Musisi/ADATEST")
 ## Data Aavilability
 All data supporting the findings of this study are publicly available in this repository:
 
-Simulated data: The simulated Data is located in the SimData/IBD and SimData/Dietswap folder for the simulation outputs for both the IBD and DietSwap settings respectively, under multiple scenarios. The R code used for simulating the data can be found in SimData/simulations R code
+- **Simulated Data**  
+  Available under [`SimData/`](./SimData):
+  - [`SimData/IBD/`](./SimData/IBD): Simulations for the IBD setting under multiple scenarios.
+  - [`SimData/Dietswap/`](./SimData/Dietswap): Simulations for the DietSwap setting.
+  - [`SimData/simulations R code/`](./SimData/simulations%20R%20code): R scripts used to generate the simulated datasets.
 
-Analysis: Full R scripts used to generate results can be found in the AnalysisCode/ folder.
+- **Analysis Code**  
+  See the [`AnalysisCode/`](./AnalysisCode) folder for all scripts used in pre-processing, model training, and test statistic evaluation.
 
-Results: Results: Processed results, including test statistics and FDR-adjusted p-values, are provided in Excel format in the Results/ directory.
+- **Results**  
+  The [`Results/`](./Results) folder contains Excel files with processed outputs, including test statistics and FDR-adjusted p-values.
 
 ## Example
 See example vignette for more explanation on how to use ADATEST on a real dataset.
