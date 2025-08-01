@@ -29,7 +29,7 @@ All data supporting the findings of this study are publicly available in this re
 See example vignette for more explanation on how to use ADATEST on a real dataset.
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the [`LICENSE/`](ADATEST/LICENSE) file for details.
 
 
 
