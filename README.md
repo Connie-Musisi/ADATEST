@@ -26,7 +26,7 @@ All data supporting the findings of this study are publicly available in this re
   The [`Results/`](./Results) folder contains Excel files with processed outputs, including test statistics and FDR-adjusted p-values.
 
 ## Example
-See example [`vignette`](.vignettes/) for more explanation on how to use ADATEST on a real dataset.
+See example [`vignette`](./vignettes) for more explanation on how to use ADATEST on a real dataset.
 
 ## License
 This project is licensed under the MIT License. See the [`LICENSE/`](./LICENSE) file for details.
