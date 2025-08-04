@@ -11,18 +11,15 @@ devtools::install_github("Connie-Musisi/ADATEST")
 ```
 
 ## Data Aavilability
-All data supporting the findings of this study are publicly available in this repository:
-
-- **Simulated Data**  
-  Available under [`SimData/`](./SimData):
+All data supporting the findings of this study are publicly available in this repository. The simulated datasets are available under [`SimData/`](./SimData):
   - [`SimData/IBD/`](./SimData/IBD): IBD simulated datasets in the main manuscript. There are different settings.
   - [`SimData/Dietswap/`](./SimData/Dietswap): DietSwap simulated datasets in the main manuscript.
   - [`SimData/simulations R code/`](./SimData/simulations%20R%20code): R scripts used to generate the simulated datasets.
 
-- **Analysis Code**  
+## Analysis Code 
   See the [`Analysis Code/`](./AnalysisCode) folder for all scripts used in pre-processing, model training, and test statistic evaluation.
 
-- **Results**  
+## Results  
   The [`Results/`](./Results) folder contains Excel files with processed outputs, including test statistics and FDR-adjusted p-values.
 
 ## Example
