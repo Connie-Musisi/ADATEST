@@ -15,12 +15,12 @@ All data supporting the findings of this study are publicly available in this re
 
 - **Simulated Data**  
   Available under [`SimData/`](./SimData):
-  - [`SimData/IBD/`](./SimData/IBD): Simulations for the IBD setting under multiple scenarios.
-  - [`SimData/Dietswap/`](./SimData/Dietswap): Simulations for the DietSwap setting.
+  - [`SimData/IBD/`](./SimData/IBD): IBD simulated datasets in the main manuscript. There are different settings.
+  - [`SimData/Dietswap/`](./SimData/Dietswap): DietSwap simulated datasets in the main manuscript.
   - [`SimData/simulations R code/`](./SimData/simulations%20R%20code): R scripts used to generate the simulated datasets.
 
 - **Analysis Code**  
-  See the [`AnalysisCode/`](./AnalysisCode) folder for all scripts used in pre-processing, model training, and test statistic evaluation.
+  See the [`Analysis Code/`](./AnalysisCode) folder for all scripts used in pre-processing, model training, and test statistic evaluation.
 
 - **Results**  
   The [`Results/`](./Results) folder contains Excel files with processed outputs, including test statistics and FDR-adjusted p-values.
