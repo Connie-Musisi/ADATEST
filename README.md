@@ -20,7 +20,8 @@ All data supporting the findings of this study are publicly available in this re
   See the [`Analysis Code/`](./AnalysisCode) folder for all scripts used in pre-processing, model training, and test statistic evaluation.
 
 ## Results  
-  The [`Results/`](./Results) folder contains Excel files with processed outputs, including test statistics and FDR-adjusted p-values.
+  The [`Results/`](./Results) folder contains Excel files with processed outputs, including FDR and Sensitivity values for all the methods.
+  It also contains the .RData reults from ADATEST analysis, this includes the unscaled and scaled original and training datasets, score values, test statistics, raw and adjusted p-values.
 
 ## Example
 See example [`vignette`](./vignettes/Example.Rmd) for more explanation on how to use ADATEST on a real dataset.
