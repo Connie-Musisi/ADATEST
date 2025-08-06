@@ -10,6 +10,13 @@ library(devtools)
 devtools::install_github("Connie-Musisi/ADATEST")
 ```
 
+### Requred packages
+These are the packages required to run ADATEST
+    - phyloseq
+    - signtrans
+    - qvalue
+    - stats
+    
 ## Data Aavilability
 All data supporting the findings of this study are publicly available in this repository. The simulated datasets are available under [`SimData/`](./SimData): \
   `IBD data` and `Dietswap data` are the simulated datasets used in analysis for the results presented in the main manuscript. For each source data, there are 12 different settings. \
