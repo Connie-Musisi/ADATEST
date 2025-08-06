@@ -28,15 +28,15 @@ All data supporting the findings of this study are publicly available in this re
   The output is
   | Value            | Description                                   |
 |------------------|-----------------------------------------------|
-| Original_results | tetrachoric correlation (presence/absence)    |
-| Train_results | Pearson correlation among non-zeros         |
+| Original_results | Results from the OrigAlz including the scaled Original data, test statistics, raw and adjusted p-values and the new differential abundance indicator |
+| Train_results | Results from the TrainAlz including the scaled Training dataset used to fit the model, predictions on the training data and the parameter estimates from the model which are the sccores |
 | Pseudo_results | proportion of non-zeros per taxon             |
 | Unscaled_data    | proportion of non-zeros per sample            |
 | Scaled_data   | mean relative abundance per taxon             |
-| data_Adjust2Median      | vector of non-zero abundances (each taxon)    |
-| p_value | generalized gamma parameters (parametric mode only) |
-| p_adj |  |
-| test_statistic |  |
+| data_Adjust2Median | vector of non-zero abundances (each taxon)    |
+| p_value | Raw p-values |
+| p_adj | Adjusted p-values   |
+| test_statistic | Test statistic values for |
 
 
 ## Example
