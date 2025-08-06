@@ -11,7 +11,7 @@ devtools::install_github("Connie-Musisi/ADATEST")
 ```
 
 ### Requred packages
-These are the packages required to run ADATEST
+These are the packages required to run ADATEST:
     - phyloseq
     - signtrans
     - qvalue
