@@ -1,0 +1,128 @@
+# Load data
+path = "~/Sim_datasets/Dietswap_list"
+files <- list.files(path = path, pattern = "\\.RData$", full.names = TRUE)
+for(file in files) {load(file)}
+
+
+# Results for all the methods fro all settings
+methods_list <- list(
+  "ADATEST" = ADATEST_method,
+  "ADAPT" = ADAPT_method,
+  "WilcoxCLR" = WilcoxTest_clr,
+  "WilcoxTSS" = WilcoxTest_TSS,
+  "ANCOMBC2" = ancombc2_method,
+  "DESeq2" = deseq2_method,
+  "ALDEx2" = aldex_method,
+  "LinDA" = LinDA_test,
+  "ZicoSeq" = ZicoSeq_method,
+  "Corncob" = corncob_method,
+  "camp" = camp_method,
+  "MaAsLin2" = MaAsLin2_method
+)
+
+settings_list <- c(
+  "Setting1_n50_b1.5_rnt13", "Setting2_n200_b1.5_rnt13",
+  "Setting3_n50_b3_rnt13", "Setting4_n200_b3_rnt13",
+  "Setting5_n50_b5_rnt13", "Setting6_n200_b5_rnt13",
+  "Setting7_n50_b1.5_rnt26", "Setting8_n200_b1.5_rnt26",
+  "Setting9_n50_b3_rnt26", "Setting10_n200_b3_rnt26",
+  "Setting11_n50_b5_rnt26", "Setting12_n200_b5_rnt26",
+  "Setting1_n50_b1.5_rnt61", "Setting2_n200_b1.5_rnt61",
+  "Setting3_n50_b3_rnt61", "Setting4_n200_b3_rnt61",
+  "Setting5_n50_b5_rnt61", "Setting6_n200_b5_rnt61",
+  "Setting7_n50_b1.5_rnt123", "Setting8_n200_b1.5_rnt123",
+  "Setting9_n50_b3_rnt123", "Setting10_n200_b3_rnt123",
+  "Setting11_n50_b5_rnt123", "Setting12_n200_b5_rnt123"
+)
+
+
+datasets_per_setting <- list(
+  Setting1_n50_b1.5_rnt13=Setting1_n50_b1.5_rnt13,
+  Setting2_n200_b1.5_rnt13=Setting2_n200_b1.5_rnt13,
+  Setting3_n50_b3_rnt13=Setting3_n50_b3_rnt13,
+  Setting4_n200_b3_rnt13=Setting4_n200_b3_rnt13,
+  Setting5_n50_b5_rnt13=Setting5_n50_b5_rnt13,
+  Setting6_n200_b5_rnt13=Setting6_n200_b5_rnt13,
+  Setting7_n50_b1.5_rnt26=Setting7_n50_b1.5_rnt26,
+  Setting8_n200_b1.5_rnt26=Setting8_n200_b1.5_rnt26,
+  Setting9_n50_b3_rnt26=Setting9_n50_b3_rnt26,
+  Setting10_n200_b3_rnt26=Setting10_n200_b3_rnt26,
+  Setting11_n50_b5_rnt26=Setting11_n50_b5_rnt26,
+  Setting12_n200_b5_rnt26=Setting12_n200_b5_rnt26,
+  Setting1_n50_b1.5_rnt61=Setting1_n50_b1.5_rnt61,
+  Setting2_n200_b1.5_rnt61 =Setting2_n200_b1.5_rnt61,
+  Setting3_n50_b3_rnt61=Setting3_n50_b3_rnt61,
+  Setting4_n200_b3_rnt61=Setting4_n200_b3_rnt61,
+  Setting5_n50_b5_rnt61=Setting5_n50_b5_rnt61,
+  Setting6_n200_b5_rnt61=Setting6_n200_b5_rnt61,
+  Setting7_n50_b1.5_rnt123=Setting7_n50_b1.5_rnt123,
+  Setting8_n200_b1.5_rnt123=Setting8_n200_b1.5_rnt123,
+  Setting9_n50_b3_rnt123=Setting9_n50_b3_rnt123,
+  Setting10_n200_b3_rnt123=Setting10_n200_b3_rnt123,
+  Setting11_n50_b5_rnt123=Setting11_n50_b5_rnt123,
+  Setting12_n200_b5_rnt123=Setting12_n200_b5_rnt123
+)
+
+extract_setting_info <- function(setting_name) {
+  parts <- strsplit(setting_name, "_")[[1]]
+  setting_number <- gsub("Setting", "", parts[1])
+  sample_size <- gsub("n", "", parts[2])
+  beta <- gsub("b", "", parts[3])
+  causal_taxa <- gsub("rnt", "", parts[4])
+  
+  list(Setting = paste("Setting", setting_number),
+       SampleSize = as.numeric(sample_size),
+       Beta = as.numeric(beta),
+       CausalTaxa = as.numeric(causal_taxa))
+}
+
+
+
+results_list <- list()
+for (setting_name in settings_list) {
+    datasets <- datasets_per_setting[[setting_name]]
+  
+  # Extract setting information (Setting X, sample size, beta, causal taxa)
+  setting_info <- extract_setting_info(setting_name)
+
+  for (method_name in names(methods_list)) {
+        method_function <- methods_list[[method_name]]
+        method_results <- list()
+    
+    for (dataset in datasets) {
+      
+      res <- method_function(dataset)
+      
+      if (method_name == "ALDEx2") {
+        res <- res[["ALDEx2_w"]]
+      }
+      
+      tax_table_data <- tax_table(dataset)
+      isDA <- tax_table_data[rownames(res), "isDA"]
+      isDA <- as.vector(isDA)
+      
+      result <- eval(alpha=0.05, pval=res$adjP, n.taxa=length(isDA), de.ind=isDA)
+      method_results[[length(method_results) + 1]] <- result
+    }
+    
+    combined_results <- do.call(rbind, method_results)
+    avg_result <- colMeans(combined_results[, c("sensitivity", "FDR", "type1error")])
+    
+    results_list[[length(results_list) + 1]] <- data.frame(
+      SimMethod = "MIDASim",
+      Method = method_name,
+      FDR = avg_result["FDR"],
+      Sensitivity = avg_result["sensitivity"],
+      Type1Error = avg_result["type1error"],
+      SampleSize = setting_info$SampleSize,
+      Beta = setting_info$Beta,
+      CausalTaxa = setting_info$CausalTaxa,
+      Setting = setting_info$Setting
+    )
+  }
+}
+
+final_results <- do.call(rbind, results_list)
+View(final_results)
+
+save(final_results, file = "final_results.RData")
