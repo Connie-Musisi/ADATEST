@@ -11,11 +11,7 @@ devtools::install_github("Connie-Musisi/ADATEST")
 ```
 
 ### Requred packages
-These are the packages required to run ADATEST:
-    - phyloseq
-    - signtrans
-    - qvalue
-    - stats
+The packages required to run ADATEST are `phyloseq`, `signtrans`, `qvalue` and `stats`.
     
 ## Data Aavilability
 All data supporting the findings of this study are publicly available in this repository. The simulated datasets are available under [`SimData/`](./SimData): \
