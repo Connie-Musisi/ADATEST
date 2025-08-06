@@ -28,15 +28,15 @@ All data supporting the findings of this study are publicly available in this re
   The output is
   | Value            | Description                                   |
 |------------------|-----------------------------------------------|
-| Original_results | Results from the OrigAlz including the scaled Original data, test statistics, raw and adjusted p-values and the new differential abundance indicator |
-| Train_results | Results from the TrainAlz including the scaled Training dataset used to fit the model, predictions on the training data and the parameter estimates from the model which are the sccores |
-| Pseudo_results | proportion of non-zeros per taxon             |
-| Unscaled_data    | proportion of non-zeros per sample            |
-| Scaled_data   | mean relative abundance per taxon             |
-| data_Adjust2Median | vector of non-zero abundances (each taxon)    |
-| p_value | Raw p-values |
-| p_adj | Adjusted p-values   |
-| test_statistic | Test statistic values for |
+| `Original_results` | Results from the `OrigAlz` including the scaled Original data, test statistics, raw and adjusted p-values and the new differential abundance indicator |
+| `Train_results` | Results from the `TrainAlz` including the scaled Training dataset used to fit the model, predictions on the training data and the parameter estimates from the model which are the sccores |
+| `Pseudo_results` | Results from the `PseudoData` funcrtion including the Training dataset used as input in `TrainAlz` and   |
+| `Unscaled_data`    | Original and Training datasets before the `Normalize` function is applied   |
+| `Scaled_data`   | Scaled Original and training datasets using the `Normalize` function       |
+| `data_Adjust2Median` | The dataset adjusted to correct for compositionality usind the `Adjust2Median` function    |
+| `p_value` | Raw p-values |
+| `p_adj` | Adjusted p-values   |
+| `test_statistic` | Test statistic values for each taxon |
 
 
 ## Example
