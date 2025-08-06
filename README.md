@@ -23,8 +23,21 @@ All data supporting the findings of this study are publicly available in this re
   The file `Code_for_plotting_graphs` contains the R code for all the plots that are presented in the main manuscript and Supplementary file.
   
 ## Results  
-  The [`Results/`](./Results) folder contains Excel files with processed outputs, including FDR and Sensitivity values for all the methods.
-  It also contains the .RData reults from ADATEST analysis, this includes the unscaled and scaled original and training datasets, score values, test statistics, raw and adjusted p-values.
+  The [`Results/`](./Results) folder contains Excel files with processed outputs, including FDR and Sensitivity values for all the methods. \
+  It also contains the .RData reults from ADATEST analysis, this includes the unscaled and scaled original and training datasets, score values, test statistics, raw and adjusted p-values. \
+  The output is
+  | Value            | Description                                   |
+|------------------|-----------------------------------------------|
+| Original_results | tetrachoric correlation (presence/absence)    |
+| Train_results | Pearson correlation among non-zeros         |
+| Pseudo_results | proportion of non-zeros per taxon             |
+| Unscaled_data    | proportion of non-zeros per sample            |
+| Scaled_data   | mean relative abundance per taxon             |
+| data_Adjust2Median      | vector of non-zero abundances (each taxon)    |
+| p_value | generalized gamma parameters (parametric mode only) |
+| p_adj |  |
+| test_statistic |  |
+
 
 ## Example
 See example [`vignette`](./vignettes/Example.Rmd) for more explanation on how to use ADATEST on a real dataset.
