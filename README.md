@@ -25,7 +25,7 @@ All data supporting the findings of this study are publicly available in this re
   `IBD data` and `Dietswap data` are the simulated datasets used in analysis for the results presented in the main manuscript. For each source data, there are 12 different settings. \
   `IBD_NoComp data`, `Dietswap_NoComp data` were used for the no compositionality analysis which is presented in the Supplementary file. The results from `NegativeBinomial data` and `SPsimSeq data` simulated datasets are aslo presneted in the Supplementary. \
   `DATA_SIMULATION_FRAMEWORK.pptx` gives an overview of the simulated framework settings. \
-   R scripts used to generate the simulated datasets.
+   `Simulate_data` provides the R scripts used to generate the simulated datasets, starting with using `MIDASim` to simulate the counts and then creating a phyloseq object for each simulated count dataset.
 
 ## Analysis Code 
   See the [`AnalysisCode/`](./AnalysisCode) folder for all the R scripts used evaluation of ADATEST and all competitor methods.
@@ -36,7 +36,7 @@ All data supporting the findings of this study are publicly available in this re
 ## Results  
   The [`Results/`](./Results) folder contains Excel files with processed outputs, including FDR and Sensitivity values for all the methods. \
   It also contains the .RData reults from ADATEST analysis, this includes the unscaled and scaled original and training datasets, score values, test statistics, raw and adjusted p-values. \
-  The output is
+  The output is:
   | Value            | Description                                   |
 |------------------|-----------------------------------------------|
 | `Original_results` | Results from the `OrigAlz` including the scaled Original data, test statistics, raw and adjusted p-values and the new differential abundance indicator |
@@ -51,7 +51,7 @@ All data supporting the findings of this study are publicly available in this re
 
 
 ## Example
-See example [`vignette`](./vignettes/Example.Rmd) for more explanation on how to use ADATEST on a real dataset.
+The input for `ADATEST` is a phyloseq object with an OTU table, meta data and a taxa table. See example [`vignette`](./vignettes/Example.Rmd) for more explanation on how to use `ADATEST` on a real dataset.
 
 ## License
 This project is licensed under the MIT License. See the [`LICENSE/`](./LICENSE) file for details. \
