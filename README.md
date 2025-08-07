@@ -17,10 +17,10 @@ library(devtools)
 devtools::install_github("Connie-Musisi/ADATEST")
 ```
 
-### Requred packages
+### Required packages
 The packages required to run ADATEST are `phyloseq`, `signtrans`, `qvalue` and `stats`.
     
-## Data Aavilability
+## Data Availability
 All data supporting the findings of this study are publicly available in this repository. The simulated datasets are available under [`SimData/`](./SimData): \
   `IBD data` and `Dietswap data` are the simulated datasets used in analysis for the results presented in the main manuscript. For each source data, there are 12 different settings. \
   `IBD_NoComp data`, `Dietswap_NoComp data` were used for the no compositionality analysis which is presented in the Supplementary file. The results from `NegativeBinomial data` and `SPsimSeq data` simulated datasets are aslo presneted in the Supplementary. \
