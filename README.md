@@ -1,6 +1,13 @@
 # ADATEST: An Adaptive Test for Differential Abundance in Microbiome Studies
 ## Overview
-The ADATEST package implements a novel adaptive test for differential abundance analysis (DAA) using order statistics in microbiome studies when there are two groups. This method is designed to handle the complex characteristics of microbiome data, such as sparsity, compositionality, and overdispersion. It involves three key steps: (1) constructing a pseudo-dataset by generating all unique taxa pairs from one group, and then obtaining a training dataset, (2) estimating scores from the training dataset using a linear model (Partial Least Squares), and (3) using the score estimates to compute the test statistics of the original dataset to detect differential abundance.
+The ADATEST package implements a novel adaptive test for differential abundance analysis (DAA) using order statistics in microbiome studies when there are two groups. This method is designed to handle the complex characteristics of microbiome data, such as sparsity, compositionality, and overdispersion.
+
+### Key Steps
+The ADATEST algorithm involves the following three steps:
+1. **Correction for compositionality:** The relative abundances of the original dataset are centered using the median log-fold change to remove compositional bias.
+2. **Construct a pseudo-dataset:** Generate all unique taxa pairs from one group and use these to build a labeled training dataset for model fitting.
+3. **Estimate scores from training data:** Fit a linear model (Partial Least Squares) to the training dataset to learn taxon-level importance scores.
+4. **Compute test statistics on the original data:** Apply the estimated scores to the original dataset to compute test statistics and the p-values obtained from the permutation null distribution of the test statistics are adjusted to control the FDR.
 
 ## Installation
 To install the latest version of ADATEST from GitHub, you can use the 'devtools' package.
