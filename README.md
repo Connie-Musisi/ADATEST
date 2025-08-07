@@ -54,9 +54,11 @@ All data supporting the findings of this study are publicly available in this re
 See example [`vignette`](./vignettes/Example.Rmd) for more explanation on how to use ADATEST on a real dataset.
 
 ## License
-This project is licensed under the MIT License. See the [`LICENSE/`](./LICENSE) file for details.
-
-
-
+This project is licensed under the MIT License. See the [`LICENSE/`](./LICENSE) file for details. \
 This repository ensures reproducibility of all analyses presented in the manuscript. No restrictions apply to data access.
 
+## References
+[1] He, M., Zhao, N. & Satten, G.A. MIDASim: a fast and simple simulator for realistic microbiome data. *Microbiome* 12, 135 (2024). [https://doi.org/10.1186/s40168-024-01822-z](https://doi.org/10.1186/s40168-024-01822-z)
+[2] O’Keefe, S., Li, J., Lahti, L. et al. Fat, fibre and cancer risk in African Americans and rural Africans. *Nat Commun* 6, 6342 (2015). [https://doi.org/10.1038/ncomms7342](https://doi.org/10.1038/ncomms7342)
+[3] Lloyd-Price, J., Arze, C., Ananthakrishnan, A.N. *et al.* Multi-omics of the gut microbial ecosystem in inflammatory bowel diseases. *Nature*, 569, 655–662 (2019). [https://doi.org/10.1038/s41586-019-1237-9](https://doi.org/10.1038/s41586-019-1237-9)
+[4]  Kodalci L, Thas O (2023) Simple and flexible sign and rank-based methods for testing for differential abundance in microbiome studies. *PLoS ONE* 18(9): e0292055. [https://doi.org/10.1371/journal.pone.0292055](https://doi.org/10.1371/journal.pone.0292055)
