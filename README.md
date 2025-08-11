@@ -24,14 +24,16 @@ The packages required to run ADATEST are `phyloseq`, `signtrans`, `qvalue` and `
 All data supporting the findings of this study are publicly available in this repository. The simulated datasets are available under [`SimData/`](./SimData): \
   `IBD data` and `Dietswap data` are the simulated datasets used in analysis for the results presented in the main manuscript. For each source data, there are 12 different settings. \
   `IBD_NoComp data`, `Dietswap_NoComp data` were used for the no compositionality analysis which is presented in the Supplementary file. The results from `NegativeBinomial data` and `SPsimSeq data` simulated datasets are aslo presneted in the Supplementary. \
-  `DATA_SIMULATION_FRAMEWORK.pptx` gives an overview of the simulated framework settings. \
-   `Simulate_data` provides the R scripts used to generate the simulated datasets, starting with using `MIDASim` to simulate the counts and then creating a phyloseq object for each simulated count dataset.
+  `DATA_SIMULATION_FRAMEWORK.pptx` gives an overview of the simulated framework settings. 
 
 ## Analysis Code 
-  See the [`AnalysisCode/`](./AnalysisCode) folder for all the R scripts used evaluation of ADATEST and all competitor methods.
-  The file `Functions_for_methods` is where a function is made for each method to output the test statistics, raw and adjusted p-values. It also contains the `eval` function which calculates the FDR, Sensitivity and Type I error. \
-  The file `Analysis_for_methods` uses all the functions of the different methods to do analysis on each data setting. The output is a dataframe containing all the FDR and Sensitivity values for all the methods for all the datasets. \
-  The file `Code_for_plotting_graphs` contains the R code for all the plots that are presented in the main manuscript and Supplementary file.
+  See the [`All_analysis_Code/`](./All_analysis_Code) for all the R scripts used in analysis. \
+  The folder [`Code_for_analysis_results_manuscript/`](./Code_for_analysis_results_manuscript) contains:
+  1. The file `Functions_for_methods` is where a function is made for each method to output the test statistics, raw and adjusted p-values. It also contains the `eval` function which calculates the FDR, Sensitivity and Type I error. \
+  2. The file `Analysis_for_all_methods` uses all the functions of the different methods to do analysis on each data setting. The output is a dataframe containing all the FDR and Sensitivity values for all the methods for all the datasets. \
+  3. The file `Code_for_plotting_graphs` contains the R code for all the plots that are presented in the main manuscript and Supplementary file.\
+ The folder [`Code_for_simulating data/`](./Code_for_simulating data) provides the R scripts `Simulate_data` used to generate the simulated datasets, starting with using `MIDASim` to simulate the counts and then creating a phyloseq object for each simulated count dataset.
+
   
 ## Results  
   The [`Results/`](./Results) folder contains Excel files with processed outputs, including FDR and Sensitivity values for all the methods. \
