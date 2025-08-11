@@ -38,7 +38,7 @@ All data supporting the findings of this study are publicly available in this re
   
 ## Results  
   The [`Results/`](./Results) folder contains Excel files with processed outputs, including FDR and Sensitivity values for all the methods. \
-  It also contains the .RData reults from ADATEST analysis, this includes the unscaled and scaled original and training datasets, score values, test statistics, raw and adjusted p-values. \
+  Due to size, the .RData results from ADATEST analysis can be found on [https://doi.org/10.6084/m9.figshare.29882351.v1](https://doi.org/10.6084/m9.figshare.29882351.v1), this includes the unscaled and scaled original and training datasets, score values, test statistics, raw and adjusted p-values. \
   The output is:
   | Value            | Description                                   |
 |------------------|-----------------------------------------------|
