@@ -29,9 +29,9 @@ All data supporting the findings of this study are publicly available in this re
 ## Analysis Code 
   See the [`All_analysis_Code/`](./All_analysis_Code) for all the R scripts used in analysis. \
   The folder [`Code_for_analysis_results_manuscript/`](./All_analysis_Code/Code_for_analysis_results_manuscript) contains:
-  1. The file `Functions_for_methods` is where a function is made for each method to output the test statistics, raw and adjusted p-values. It also contains the `eval` function which calculates the FDR, Sensitivity and Type I error. \
-  2. The file `Analysis_for_all_methods` uses all the functions of the different methods to do analysis on each data setting. The output is a dataframe containing all the FDR and Sensitivity values for all the methods for all the datasets. \
-  3. The file `Code_for_plotting_graphs` contains the R code for all the plots that are presented in the main manuscript and Supplementary file.\
+  1. The file `Functions_for_methods` is where a function is made for each method to output the test statistics, raw and adjusted p-values. It also contains the `eval` function which calculates the FDR, Sensitivity and Type I error.
+  2. The file `Analysis_for_all_methods` uses all the functions of the different methods to do analysis on each data setting. The output is a dataframe containing all the FDR and Sensitivity values for all the methods for all the datasets. 
+  3. The file `Code_for_plotting_graphs` contains the R code for all the plots that are presented in the main manuscript and Supplementary file.
  The folder [`Code_for_simulating_data/`](./All_analysis_Code/Code_for_simulating_data) provides the R scripts `Simulate_data` used to generate the simulated datasets, starting with using `MIDASim` to simulate the counts and then creating a phyloseq object for each simulated count dataset.
 
   
